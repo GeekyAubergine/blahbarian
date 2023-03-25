@@ -9,10 +9,49 @@ import {
   PowerUpType,
   Vector,
   Player,
+  MOVEMENT,
 } from "./types";
 import { config } from "./main";
 import { sample } from "lodash";
 import { spawnPointForEnemy } from "./utils";
+
+const SWORD_FRAMES = {
+  [MOVEMENT.IDLE]: [
+    "sword-down-1",
+    "sword-down-2",
+    "sword-down-3",
+    "sword-down-4",
+    "sword-down-5",
+  ],
+  [MOVEMENT.UP]: [
+    "sword-up-1",
+    "sword-up-2",
+    "sword-up-3",
+    "sword-up-4",
+    "sword-up-5",
+  ],
+  [MOVEMENT.DOWN]: [
+    "sword-down-1",
+    "sword-down-2",
+    "sword-down-3",
+    "sword-down-4",
+    "sword-down-5",
+  ],
+  [MOVEMENT.LEFT]: [
+    "sword-left-1",
+    "sword-left-2",
+    "sword-left-3",
+    "sword-left-4",
+    "sword-left-5",
+  ],
+  [MOVEMENT.RIGHT]: [
+    "sword-right-1",
+    "sword-right-2",
+    "sword-right-3",
+    "sword-right-4",
+    "sword-right-5",
+  ],
+};
 
 export const TILE_SIZE = 64;
 const HEALTH_HEART_UNIT_AMOUNT = 20;
@@ -96,7 +135,7 @@ export function renderPlayer(
   ctx: CanvasRenderingContext2D,
   spiteSheets: SpriteSheets,
   animationFrame: number,
-  player: Entity
+  player: Player
 ) {
   ctx.fillStyle = "blue";
   const { x, y } = player.position;
@@ -109,6 +148,43 @@ export function renderPlayer(
   if (!frame) {
     return;
   }
+
+  const swordFrame =
+    SWORD_FRAMES[player.movement][
+      animationFrame % SWORD_FRAMES[player.movement].length
+    ];
+
+  let offset: Vector = {
+    x: 0,
+    y: 0,
+  };
+
+  if (player.movement === MOVEMENT.UP) {
+    offset.y = -TILE_SIZE / 2;
+  } else if (
+    player.movement === MOVEMENT.DOWN ||
+    player.movement === MOVEMENT.IDLE
+  ) {
+    offset.y = TILE_SIZE / 2;
+  } else if (player.movement === MOVEMENT.LEFT) {
+    offset.x = -TILE_SIZE / 2;
+  } else if (player.movement === MOVEMENT.RIGHT) {
+    offset.x = TILE_SIZE / 2;
+  }
+
+  //   ctx.rotate((swordRotation * Math.PI) / 180);
+
+  if (player.swinging) {
+    renderSprite(
+      ctx,
+      spiteSheets,
+      "sword",
+      swordFrame,
+      x * TILE_SIZE + offset.x,
+      y * TILE_SIZE + offset.y
+    );
+  }
+  //   ctx.rotate((-swordRotation * Math.PI) / 180);
 
   renderSprite(ctx, spiteSheets, "player", frame, x * TILE_SIZE, y * TILE_SIZE);
 }

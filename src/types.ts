@@ -57,7 +57,9 @@ export interface Entity {
   animationStartingOffset?: number;
 }
 
-export interface Player extends Entity {}
+export interface Player extends Entity {
+    swinging: boolean,
+}
 
 export interface Enemy extends Entity {
   type: EnemyType;
