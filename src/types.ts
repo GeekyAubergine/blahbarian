@@ -74,6 +74,7 @@ export interface PowerUpConfig {
   radius: number;
   type: PowerUpType;
   color: string;
+  playerChanges: Partial<Player>
 }
 
 export interface PowerUp {

@@ -13,10 +13,6 @@ import { Enemy, EnemyType, Entity, PowerUp, TileType, World } from "./types";
 
 const TILE_SIZE = 64;
 
-export function boundaryChecker(entity: Entity, entity2: Entity) {
-  return Math.hypot(entity.position.x - entity2.position.x, entity.position.y - entity2.position.y) <= 1
-}
-
 export function renderSprite(
   ctx: CanvasRenderingContext2D,
   spiteSheets: SpriteSheets,
@@ -164,10 +160,6 @@ export function renderWorld(
   })
 
   renderPlayer(ctx, SPRITE_SHEETS, animationFrame, world.player);
-
-  world.enemies.forEach((enemy) => {
-    console.log(boundaryChecker(world.player, enemy))
-  })
 
   ctx.resetTransform();
 }

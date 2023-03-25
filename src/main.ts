@@ -7,20 +7,25 @@ import {
   PowerUpConfig,
   PowerUpType,
   World,
+  Entity,
+  Vector,
 } from "./types";
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
 const ctx = canvas.getContext("2d")!;
 
-export const config = {
+export const config: Record<PowerUpType, PowerUpConfig> = {
   [PowerUpType.KETCHUP]: {
     type: PowerUpType.KETCHUP,
     duration: -1,
     radius: 8,
     color: "orange",
+    playerChanges: {
+      walkSpeed: 2,
+    }
   },
-} as const satisfies Record<PowerUpType, PowerUpConfig>;
+};
 
 const world: World = {
   tiles: [],
@@ -83,12 +88,41 @@ const userInputFlags = {
 let lastUpdate: number | null = null;
 let tick = 0;
 
+export function boundaryChecker(
+  entity: { position: Vector },
+  entity2: { position: Vector }
+) {
+  return Math.hypot(entity.position.x - entity2.position.x,
+    entity.position.y - entity2.position.y) <= 1
+}
+
 function update() {
   let dt = lastUpdate ? (Date.now() - lastUpdate) / 1000 : 0;
 
   renderWorld(canvas, ctx, tick, world);
 
   window.requestAnimationFrame(update);
+
+  world.enemies.forEach((enemy) => {
+    if (boundaryChecker(world.player, enemy)) {
+      world.player.health -= 10
+    }
+  })
+
+  if (world.player.health < 0) {
+    throw Error("Oh no")
+  }
+
+  world.powerUps.forEach((powerUp, i) => {
+    if (boundaryChecker(world.player, powerUp)) {
+      world.powerUps = world.powerUps.filter((_, ii) => i !== ii)
+      for (const prop of (['walkSpeed', 'health'] as const)) {
+        world.player[prop] +=
+          config[powerUp.type].playerChanges?.[prop] ?? world.player[prop]
+      }
+    }
+  })
+
 
   if (userInputFlags.up) {
     world.player.position.y -= world.player.walkSpeed * dt;
