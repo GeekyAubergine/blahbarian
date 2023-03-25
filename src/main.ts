@@ -41,6 +41,10 @@ function update() {
   if (userInputFlags.left) {
     world.player.position.x -= 0.1;
   }
+
+  if (userInputFlags.right) {
+    world.player.position.x += 0.1;
+  }
 }
 
 window.requestAnimationFrame(update);
