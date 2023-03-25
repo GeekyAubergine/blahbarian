@@ -51,7 +51,16 @@ const world: World = {
     animation: {
       [MOVEMENT.IDLE]: {
         spriteSheetId: "player",
-        spriteIds: ["player-down-1", "player-down-2"],
+        spriteIds: [
+          "player-idle-1",
+          "player-idle-1",
+          "player-idle-1",
+          "player-idle-1",
+          "player-idle-2",
+          "player-idle-2",
+          "player-idle-2",
+          "player-idle-2",
+        ],
       },
       [MOVEMENT.UP]: {
         spriteSheetId: "player",
@@ -90,24 +99,34 @@ function update() {
 
   window.requestAnimationFrame(update);
 
+  let moving = false;
+
   if (userInputFlags.up) {
     world.player.position.y -= world.player.walkSpeed * dt;
     world.player.movement = MOVEMENT.UP;
+    moving = true;
   }
 
   if (userInputFlags.down) {
     world.player.position.y += world.player.walkSpeed * dt;
-    world.player.movement = MOVEMENT.UP;
+    world.player.movement = MOVEMENT.DOWN;
+    moving = true;
   }
 
   if (userInputFlags.left) {
     world.player.position.x -= world.player.walkSpeed * dt;
     world.player.movement = MOVEMENT.LEFT;
+    moving = true;
   }
 
   if (userInputFlags.right) {
     world.player.position.x += world.player.walkSpeed * dt;
     world.player.movement = MOVEMENT.RIGHT;
+    moving = true;
+  }
+
+  if (!moving) {
+    world.player.movement = MOVEMENT.IDLE;
   }
 
   lastUpdate = Date.now();

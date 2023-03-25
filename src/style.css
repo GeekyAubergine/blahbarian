@@ -62,3 +62,7 @@ table {
   height: 400px;
   width: 400px;
 }
+
+img {
+  display: none;
+}

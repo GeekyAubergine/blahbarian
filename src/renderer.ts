@@ -14,7 +14,12 @@ import { Enemy, EnemyType, Entity, PowerUp, TileType, World } from "./types";
 const TILE_SIZE = 64;
 
 export function boundaryChecker(entity: Entity, entity2: Entity) {
-  return Math.hypot(entity.position.x - entity2.position.x, entity.position.y - entity2.position.y) <= 1
+  return (
+    Math.hypot(
+      entity.position.x - entity2.position.x,
+      entity.position.y - entity2.position.y
+    ) <= 1
+  );
 }
 
 export function renderSprite(
@@ -29,7 +34,7 @@ export function renderSprite(
   const spriteSheet = spiteSheets[spriteSheetId];
   const sprite = spriteSheet.sprites[spriteId];
 
-  const scale = TILE_SIZE / sprite.size;
+  const scale = TILE_SIZE / spriteSheet.spriteSize;
 
   const { image } = spriteSheet;
 
@@ -39,14 +44,14 @@ export function renderSprite(
 
   ctx.drawImage(
     image as CanvasImageSource,
-    sprite.sx * sprite.size,
-    sprite.sy * sprite.size,
-    sprite.size,
-    sprite.size,
+    sprite.sx * spriteSheet.spriteSize,
+    sprite.sy * spriteSheet.spriteSize,
+    spriteSheet.spriteSize,
+    spriteSheet.spriteSize,
     x,
     y,
-    sprite.size * scale,
-    sprite.size * scale
+    spriteSheet.spriteSize * scale,
+    spriteSheet.spriteSize * scale
   );
 }
 
@@ -74,7 +79,7 @@ export function renderPlayer(
   const { x, y } = player.position;
   // render circle
   //   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-  const frames = player.animation?.DOWN.spriteIds;
+  const frames = player.animation?.[player.movement].spriteIds;
 
   const frame = frames?.[animationFrame % frames.length];
 
@@ -82,19 +87,12 @@ export function renderPlayer(
     return;
   }
 
-  renderSprite(
-    ctx,
-    spiteSheets,
-    "player",
-    frame,
-    x * TILE_SIZE,
-    y * TILE_SIZE
-  );
+  renderSprite(ctx, spiteSheets, "player", frame, x * TILE_SIZE, y * TILE_SIZE);
 }
 
 export function renderPowerUp(ctx: CanvasRenderingContext2D, powerUp: PowerUp) {
-  ctx.fillStyle = config[powerUp.type].color
-  const { x, y } = powerUp.position
+  ctx.fillStyle = config[powerUp.type].color;
+  const { x, y } = powerUp.position;
   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 }
 
@@ -160,14 +158,14 @@ export function renderWorld(
   });
 
   world.powerUps.forEach((powerUp) => {
-    renderPowerUp(ctx, powerUp)
-  })
+    renderPowerUp(ctx, powerUp);
+  });
 
   renderPlayer(ctx, SPRITE_SHEETS, animationFrame, world.player);
 
   world.enemies.forEach((enemy) => {
-    console.log(boundaryChecker(world.player, enemy))
-  })
+    console.log(boundaryChecker(world.player, enemy));
+  });
 
   ctx.resetTransform();
 }

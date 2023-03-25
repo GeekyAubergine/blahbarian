@@ -4,22 +4,61 @@ import { SpriteSheet } from "./types";
 export const PLAYER_SPRITE_SHEET: SpriteSheet = {
   id: "player",
   image: document.getElementById("shark-sprites"),
+  spriteSize: 128,
   sprites: {
     "player-down-1": {
       id: "player-down-1",
-      size: 64,
       sx: 0,
       sy: 0,
     },
     "player-down-2": {
       id: "player-down-2",
-      size: 64,
       sx: 1,
       sy: 0,
     },
+    "player-up-1": {
+      id: "player-up-1",
+      sx: 0,
+      sy: 1,
+    },
+    "player-up-2": {
+      id: "player-up-2",
+      sx: 1,
+      sy: 1,
+    },
+    "player-right-1": {
+      id: "player-right-1",
+      sx: 0,
+      sy: 2,
+    },
+    "player-right-2": {
+      id: "player-right-2",
+      sx: 1,
+      sy: 2,
+    },
+    "player-left-1": {
+      id: "player-left-1",
+      sx: 0,
+      sy: 3,
+    },
+    "player-left-2": {
+      id: "player-left-2",
+      sx: 1,
+      sy: 3,
+    },
+    'player-idle-1': {
+        id: 'player-idle-1',
+        sx: 0,
+        sy: 4,
+    },
+    'player-idle-2': {
+        id: 'player-idle-2',
+        sx: 1,
+        sy: 4,
+    },
   },
-  width: 32,
-  height: 16,
+  width: 128,
+  height: 256,
 };
 console.log("sdlfkjlksejhf;kj");
 
