@@ -7,11 +7,13 @@ export interface SpriteSheetSprite {
 
 export interface SpriteSheet {
   id: string;
-  file: string;
+  image: HTMLElement | null;
   sprites: Record<string, SpriteSheetSprite>;
   width: number;
   height: number;
 }
+
+export type SpriteSheets = Record<string, SpriteSheet>;
 
 export interface Animation {
   spriteSheetId: string;

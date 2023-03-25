@@ -1,6 +1,48 @@
-import { Enemy, EnemyType, Entity, TileType, World } from "./types";
+import { SPRITE_SHEETS } from "./sprites";
+import {
+  Enemy,
+  EnemyType,
+  Entity,
+  SpriteSheet,
+  SpriteSheets,
+  TileType,
+  World,
+} from "./types";
 
 const TILE_SIZE = 64;
+
+export function renderSprite(
+  ctx: CanvasRenderingContext2D,
+  spiteSheets: SpriteSheets,
+  spriteSheetId: string,
+  spriteId: string,
+  x: number,
+  y: number
+) {
+  // render sprite
+  const spriteSheet = spiteSheets[spriteSheetId];
+  const sprite = spriteSheet.sprites[spriteId];
+
+  const scale = TILE_SIZE / sprite.size;
+
+  const { image } = spriteSheet;
+
+  if (!image) {
+    throw new Error("Image not found");
+  }
+
+  ctx.drawImage(
+    image as CanvasImageSource,
+    sprite.sx,
+    sprite.sy,
+    sprite.size,
+    sprite.size,
+    x,
+    y,
+    sprite.size * scale,
+    sprite.size * scale
+  );
+}
 
 export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
   switch (enemy.type) {
@@ -16,11 +58,23 @@ export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 }
 
-export function renderPlayer(ctx: CanvasRenderingContext2D, player: Entity) {
+export function renderPlayer(
+  ctx: CanvasRenderingContext2D,
+  spiteSheets: SpriteSheets,
+  player: Entity
+) {
   ctx.fillStyle = "blue";
   const { x, y } = player.position;
   // render circle
-  ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  //   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  renderSprite(
+    ctx,
+    spiteSheets,
+    "player",
+    "player-down-1",
+    x * TILE_SIZE,
+    y * TILE_SIZE
+  );
 }
 
 export function renderTile(
@@ -46,6 +100,9 @@ export function renderWorld(
   ctx: CanvasRenderingContext2D,
   world: World
 ) {
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
   const { width, height } = canvas;
   const { player } = world;
   const { position: playerPosition } = player;
@@ -78,7 +135,7 @@ export function renderWorld(
     renderEnemy(ctx, enemy);
   });
 
-  renderPlayer(ctx, world.player);
+  renderPlayer(ctx, SPRITE_SHEETS, world.player);
 
   ctx.resetTransform();
 }

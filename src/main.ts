@@ -1,5 +1,5 @@
 import { renderWorld } from "./renderer";
-import sprites from "./sprites";
+import "./sprites";
 import "./style.css";
 import { Direction, EnemyType, World } from "./types";
 
@@ -16,6 +16,24 @@ const world: World = {
     velocity: { x: 0, y: 0 },
     health: 100,
     direction: Direction.UP,
+    animation: {
+      [Direction.UP]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-up-1", "player-up-2"],
+      },
+      [Direction.DOWN]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-down-1", "player-down-2"],
+      },
+      [Direction.LEFT]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-left-1", "player-left-2"],
+      },
+      [Direction.RIGHT]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-right-1", "player-right-2"],
+      },
+    },
   },
 };
 
