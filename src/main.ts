@@ -32,10 +32,12 @@ function update() {
 
   if (userInputFlags.up) {
     world.player.position.y -= 0.1;
+    world.player.direction = Direction.UP;
   }
 
   if (userInputFlags.down) {
     world.player.position.y += 0.1;
+    world.player.direction = Direction.UP;
   }
 
   if (userInputFlags.left) {
@@ -54,6 +56,7 @@ window.requestAnimationFrame(update);
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') {
     userInputFlags.down = true;
+
   } else if (e.key === 'ArrowUp') {
     userInputFlags.up = true;
   } else if (e.key === 'ArrowLeft') {
