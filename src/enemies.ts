@@ -1,6 +1,9 @@
 import { Enemy, EnemyType, MOVEMENT, World } from "./types";
 import { spawnPointForEnemy } from "./utils";
 
+const BASE_ENEMY_SPAWNING = 2;
+const ENEMY_SPAWNING_DIVIDER = 1000;
+
 export const BASE_WARDROBE: Enemy = {
   id: "",
   type: EnemyType.WARDROBE,
@@ -37,8 +40,16 @@ export const BASE_WARDROBE: Enemy = {
 
 const ENEMIES = [BASE_WARDROBE];
 
-export function spawnEntities(world: World, dt: number) {
-  if (dt % 60 && world.enemies.length < 10) {
+export function spawnEntities(world: World, dt: number, startTime: number) {
+  const timeSinceStart = Date.now() - startTime;
+
+  //   console.log({ timeSinceStart });
+
+  const maxEnimies = Math.floor(
+    (timeSinceStart / ENEMY_SPAWNING_DIVIDER)
+  );
+
+  if (dt % 60 && world.enemies.length < maxEnimies) {
     const enemy = ENEMIES[Math.floor(Math.random() * ENEMIES.length)];
     world.enemies.push({
       ...enemy,

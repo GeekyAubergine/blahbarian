@@ -1,19 +1,26 @@
-import { SPRITE_SHEETS } from "./sprites";
+import { MEATBALL_SPRITE_SHEET, SPRITE_SHEETS } from "./sprites";
 import {
   Enemy,
-  EnemyType,
   Entity,
   SpriteSheets,
   TileType,
   World,
   PowerUp,
   PowerUpType,
+  Vector,
+  Player,
 } from "./types";
 import { config } from "./main";
 import { sample } from 'lodash'
 import { spawnPointForEnemy } from "./utils";
 
 const TILE_SIZE = 64;
+const HEALTH_HEART_UNIT_AMOUNT = 20
+const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT
+
+export function boundaryChecker(entity: Entity, entity2: Entity) {
+  return Math.hypot(entity.position.x - entity2.position.x, entity.position.y - entity2.position.y) <= 1
+}
 
 export function renderSprite(
   ctx: CanvasRenderingContext2D,
@@ -177,6 +184,7 @@ export function renderWorld(
   ctx.resetTransform();
 
   renderRandomPowerup(world);
+  renderPlayerHealth(canvas, ctx, world.player);
 }
 
 export function renderRandomPowerup(world: World): void {
@@ -191,4 +199,44 @@ export function renderRandomPowerup(world: World): void {
     type: sample(powerups) as PowerUpType,
     position: spawnPointForEnemy(world, 1, 1),
   })
+}
+
+type HeartType = 'full' | 'half' | 'empty'
+
+function renderHeartSprite(ctx: CanvasRenderingContext2D, type: HeartType, position: Vector) {
+  const { x, y } = position
+
+  renderSprite(ctx, SPRITE_SHEETS, MEATBALL_SPRITE_SHEET.id, type, x, y)
+}
+
+function renderPlayerHealth(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, player: Player): void {
+  const { width } = canvas;
+  const { health } = player
+
+  ctx.translate(0, 0);
+
+  const numOfFullHearts = health > 0 ? Math.floor(health / HEALTH_HEART_UNIT_AMOUNT) : 0
+  const hasHalfHeart = health > 0 ? (health / HEALTH_HEART_UNIT_AMOUNT) % 1 >= 0.5 : false
+
+  const healthPosition: Vector = {
+    x: width * 0.65,
+    y: TILE_SIZE * 0.5,
+  }
+
+  for (let i = 0; i < numOfFullHearts; i = i + 1) {
+    renderHeartSprite(ctx, 'full', healthPosition)
+    healthPosition.x += TILE_SIZE
+  }
+
+  if (hasHalfHeart) {
+    renderHeartSprite(ctx, 'half', healthPosition)
+    healthPosition.x += TILE_SIZE
+  }
+
+  let renderedSpaces = numOfFullHearts + (hasHalfHeart ? 1 : 0)
+
+  for (renderedSpaces; renderedSpaces < TOTAL_AVAILABLE_HEARTS; renderedSpaces += 1) {
+    renderHeartSprite(ctx, 'empty', healthPosition);
+    healthPosition.x += TILE_SIZE
+  }
 }

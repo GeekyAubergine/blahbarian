@@ -2,19 +2,10 @@ import { spawnEntities } from "./enemies";
 import { renderWorld } from "./renderer";
 import "./sprites";
 import "./style.css";
-import {
-  MOVEMENT,
-  EnemyType,
-  PowerUpConfig,
-  PowerUpType,
-  World,
-  Vector,
-} from "./types";
-import {
-  movementForVector,
-  moveTowardsPlayer,
-  spawnPointForEnemy,
-} from "./utils";
+import { MOVEMENT, PowerUpConfig, PowerUpType, World, Vector } from "./types";
+import { movementForVector, moveTowardsPlayer } from "./utils";
+
+const INVINICIBILITY_TIME = 500;
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
@@ -68,7 +59,7 @@ const world: World = {
     id: "player",
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
-    health: 10,
+    health: 100,
     maxHealth: 150,
     walkSpeed: 3,
     movement: MOVEMENT.IDLE,
@@ -115,6 +106,7 @@ const userInputFlags = {
 
 let lastUpdate: number | null = null;
 let tick = 0;
+let startTime = Date.now();
 
 export function boundaryChecker(
   entity: { position: Vector },
@@ -193,8 +185,14 @@ function updateEntities(world: World, dt: number) {
       enemy.position.y += newPosition.y;
       enemy.movement = movementForVector(newPosition);
     }
-    
+
     if (boundaryChecker(world.player, enemy)) {
+      const timeSinceLastDamage = Date.now() - lastTimeDamageTaken;
+
+      if (timeSinceLastDamage < INVINICIBILITY_TIME) {
+        return;
+      }
+
       world.player.health -= 10;
       lastTimeDamageTaken = Date.now();
     }
@@ -203,10 +201,28 @@ function updateEntities(world: World, dt: number) {
   world.powerUps.forEach((powerUp, i) => {
     if (boundaryChecker(world.player, powerUp)) {
       world.powerUps = world.powerUps.filter((_, ii) => i !== ii);
-      for (const prop of ["walkSpeed", "health"] as const) {
-        world.player[prop] +=
-          config[powerUp.type].playerChanges?.[prop] ?? world.player[prop];
-      }
+
+      Object.keys(config[powerUp.type]?.playerChanges || {}).forEach(
+        (prop: string) => {
+          if (prop === "health") {
+            let health =
+              (config[powerUp.type].playerChanges?.[prop] || 0) +
+              world.player[prop];
+
+            if (health > 100) {
+              health = 100;
+            }
+
+            world.player[prop] = health;
+            return;
+          }
+
+          // @ts-ignore
+          world.player[prop] +=
+            // @ts-ignore
+            config[powerUp.type].playerChanges?.[prop] ?? world.player[prop];
+        }
+      );
     }
   });
 }
@@ -220,7 +236,7 @@ function update() {
 
   updateEntities(world, dt);
 
-  spawnEntities(world, dt);
+  spawnEntities(world, dt, startTime);
 
   window.requestAnimationFrame(update);
 
