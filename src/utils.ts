@@ -85,6 +85,11 @@ export function movementForVector(vector: Vector): MOVEMENT {
   }
 }
 
+export function playSound(audioPath: string) {
+  const audio = new Audio(audioPath);
+  audio.play();
+}
+
 export function exhaust(value: never): never {
   throw new Error(`Unexpected value: ${value}`);
 }

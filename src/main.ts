@@ -2,8 +2,20 @@ import { spawnEntities } from "./enemies";
 import { renderWorld, TILE_SIZE } from "./renderer";
 import "./sprites";
 import "./style.css";
-import { MOVEMENT, PowerUpConfig, PowerUpType, World, Vector } from "./types";
-import { movementForVector, moveTowardsPlayer } from "./utils";
+import {
+  MOVEMENT,
+  PowerUpConfig,
+  PowerUpType,
+  World,
+  Vector,
+  EnemyType,
+} from './types';
+import {
+  movementForVector,
+  moveTowardsPlayer,
+  playSound,
+} from './utils';
+import lodash from 'lodash';
 
 const INVINICIBILITY_TIME = 500;
 
@@ -118,6 +130,20 @@ let lastTimeDamageTaken = Date.now();
 const HEALTH_INCREMENT = 0.1;
 const REGEN_START_TIME = 5000;
 
+const damageAudioTimings: Record<EnemyType, number> = {
+  [EnemyType.CHAIR]: 0,
+  [EnemyType.TABLE]: 0,
+  [EnemyType.WARDROBE]: 0,
+};
+
+const DAMAGE_AUDIO = [
+    '/assets/ahhhh.m4a',
+    '/assets/ahhhh2.m4a',
+    '/assets/ahhhh3.m4a',
+    '/assets/ahhhh4.m4a',
+    '/assets/ahhhh5.m4a',
+]
+
 function playerControl(world: World, dt: number) {
   let moving = false;
 
@@ -221,12 +247,19 @@ function updateEntities(world: World, dt: number) {
 
       world.player.health -= 10;
       lastTimeDamageTaken = Date.now();
+
+      if (Date.now() - damageAudioTimings[enemy.type] > 1000) {
+        playSound(DAMAGE_AUDIO[lodash.random(0, DAMAGE_AUDIO.length - 1)]);
+        damageAudioTimings[enemy.type] = Date.now();
+      }
     }
   });
 
   world.powerUps.forEach((powerUp, i) => {
     if (boundaryChecker(world.player, powerUp)) {
       world.powerUps = world.powerUps.filter((_, ii) => i !== ii);
+
+      playSound('/assets/bonbonbonbon.m4a');
 
       Object.keys(config[powerUp.type]?.playerChanges || {}).forEach(
         (prop: string) => {
