@@ -14,15 +14,9 @@ import { config } from "./main";
 import { sample } from 'lodash'
 import { spawnPointForEnemy } from "./utils";
 
-<<<<<<< Updated upstream
 export const TILE_SIZE = 64;
 const HEALTH_HEART_UNIT_AMOUNT = 20
 const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT
-=======
-const TILE_SIZE = 64;
-const HEALTH_HEART_UNIT_AMOUNT = 20;
-const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT;
->>>>>>> Stashed changes
 
 export function boundaryChecker(entity: Entity, entity2: Entity) {
   return (
@@ -200,7 +194,6 @@ export function renderWorld(
   renderPlayerHealth(canvas, ctx, world.player);
 }
 
-<<<<<<< Updated upstream
 export function renderRandomPowerup(world: World): void {
   // 1 in 5 chance of spawning
   if (Math.random() < 0.99) {
@@ -215,10 +208,7 @@ export function renderRandomPowerup(world: World): void {
   })
 }
 
-type HeartType = 'full' | 'half' | 'empty'
-=======
 type HeartType = "full" | "half" | "empty";
->>>>>>> Stashed changes
 
 function renderHeartSprite(
   ctx: CanvasRenderingContext2D,

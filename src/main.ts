@@ -149,7 +149,6 @@ function playerControl(world: World, dt: number) {
     world.player.movement = MOVEMENT.IDLE;
   }
 
-<<<<<<< Updated upstream
   if (userInputFlags.attack) {
     world.enemies.forEach((enemy) => {
       const { player } = world
@@ -183,11 +182,8 @@ function playerControl(world: World, dt: number) {
     })
   }
 
-  if (world.player.health < 0) {
-=======
   if (world.player.health < 0 && !gameOver) {
     gameOver = true
->>>>>>> Stashed changes
     window.alert('Game over! Play again?');
     window.location.reload();
   }
