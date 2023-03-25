@@ -64,7 +64,7 @@ export const PLAYER_SPRITE_SHEET: SpriteSheet = {
 export const MEATBALL_SPRITE_SHEET: SpriteSheet = {
   id: "health",
   image: document.getElementById("health-sprites"),
-  spriteSize: 8,
+  spriteSize: 128,
   sprites: {
     full: {
       id: "full",
@@ -78,12 +78,12 @@ export const MEATBALL_SPRITE_SHEET: SpriteSheet = {
     },
     empty: {
       id: "empty",
-      sx: 1,
-      sy: 0,
+      sx: 0,
+      sy: 1,
     },
   },
-  width: 16,
-  height: 16,
+  width: 256,
+  height: 256,
 };
 
 

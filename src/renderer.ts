@@ -180,8 +180,8 @@ function renderPlayerHealth(canvas: HTMLCanvasElement, ctx: CanvasRenderingConte
 
   ctx.translate(0, 0);
 
-  const numOfFullHearts = Math.floor(health / HEALTH_HEART_UNIT_AMOUNT)
-  const hasHalfHeart = (health / HEALTH_HEART_UNIT_AMOUNT) % 1 >= 0.5
+  const numOfFullHearts = health > 0 ? Math.floor(health / HEALTH_HEART_UNIT_AMOUNT) : 0
+  const hasHalfHeart = health > 0 ? (health / HEALTH_HEART_UNIT_AMOUNT) % 1 >= 0.5 : false
 
   const healthPosition: Vector = {
     x: width * 0.65,
