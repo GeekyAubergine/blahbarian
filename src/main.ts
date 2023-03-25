@@ -142,7 +142,12 @@ const DAMAGE_AUDIO = [
     '/assets/ahhhh3.m4a',
     '/assets/ahhhh4.m4a',
     '/assets/ahhhh5.m4a',
-]
+];
+
+const POWER_UP_AUDIO = [
+    '/assets/blahaj.m4a',
+    '/assets/bonbonbonbon.m4a',
+];
 
 function playerControl(world: World, dt: number) {
   let moving = false;
@@ -259,7 +264,7 @@ function updateEntities(world: World, dt: number) {
     if (boundaryChecker(world.player, powerUp)) {
       world.powerUps = world.powerUps.filter((_, ii) => i !== ii);
 
-      playSound('/assets/bonbonbonbon.m4a');
+      playSound(POWER_UP_AUDIO[lodash.random(0, POWER_UP_AUDIO.length - 1)]);
 
       Object.keys(config[powerUp.type]?.playerChanges || {}).forEach(
         (prop: string) => {
