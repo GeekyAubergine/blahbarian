@@ -2,17 +2,10 @@ import { spawnEntities } from "./enemies";
 import { renderWorld } from "./renderer";
 import "./sprites";
 import "./style.css";
-import {
-  MOVEMENT,
-  PowerUpConfig,
-  PowerUpType,
-  World,
-  Vector,
-} from "./types";
-import {
-  movementForVector,
-  moveTowardsPlayer,
-} from "./utils";
+import { MOVEMENT, PowerUpConfig, PowerUpType, World, Vector } from "./types";
+import { movementForVector, moveTowardsPlayer } from "./utils";
+
+const INVINICIBILITY_TIME = 500;
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
@@ -170,6 +163,12 @@ function updateEntities(world: World, dt: number) {
     }
 
     if (boundaryChecker(world.player, enemy)) {
+      const timeSinceLastDamage = Date.now() - lastTimeDamageTaken;
+
+      if (timeSinceLastDamage < INVINICIBILITY_TIME) {
+        return;
+      }
+
       world.player.health -= 10;
       lastTimeDamageTaken = Date.now();
     }
@@ -177,25 +176,29 @@ function updateEntities(world: World, dt: number) {
 
   world.powerUps.forEach((powerUp, i) => {
     if (boundaryChecker(world.player, powerUp)) {
-      world.powerUps = world.powerUps.filter((_, ii) => i !== ii)
-    
-      Object.keys(config[powerUp.type]?.playerChanges || {}).forEach((prop: string) => {
-        if (prop === 'health') {
-          let health = (config[powerUp.type].playerChanges?.[prop] || 0) + world.player[prop]
+      world.powerUps = world.powerUps.filter((_, ii) => i !== ii);
 
-          if (health > 100) {
-            health = 100
+      Object.keys(config[powerUp.type]?.playerChanges || {}).forEach(
+        (prop: string) => {
+          if (prop === "health") {
+            let health =
+              (config[powerUp.type].playerChanges?.[prop] || 0) +
+              world.player[prop];
+
+            if (health > 100) {
+              health = 100;
+            }
+
+            world.player[prop] = health;
+            return;
           }
 
-          world.player[prop] = health
-          return
-        }
-
-        // @ts-ignore
-        world.player[prop] +=
           // @ts-ignore
-          config[powerUp.type].playerChanges?.[prop] ?? world.player[prop]
-      })
+          world.player[prop] +=
+            // @ts-ignore
+            config[powerUp.type].playerChanges?.[prop] ?? world.player[prop];
+        }
+      );
     }
   });
 }
