@@ -32,8 +32,14 @@ function update() {
 
   if (userInputFlags.up) {
     world.player.position.y -= 0.1;
-  } else if (userInputFlags.down) {
+  }
+
+  if (userInputFlags.down) {
     world.player.position.y += 0.1;
+  }
+
+  if (userInputFlags.left) {
+    world.player.position.x -= 0.1;
   }
 }
 
@@ -53,8 +59,9 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('keyup', (e) => {
   if (e.key === 'ArrowUp') {
-  } else if (e.key === 'ArrowUp') {
     userInputFlags.up = false;
+  } else if (e.key === 'ArrowDown') {
+    userInputFlags.down = false;
   } else if (e.key === 'ArrowLeft') {
     userInputFlags.left = false;
   } else if (e.key === 'ArrowRight') {
