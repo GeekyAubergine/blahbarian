@@ -48,6 +48,7 @@ export interface Entity {
   position: Vector;
   velocity: Vector;
   health: number;
+  maxHealth: number;
   walkSpeed: number;
   movement: MOVEMENT;
   animation?: Record<MOVEMENT, Animation>;

@@ -7,7 +7,6 @@ import {
   PowerUpConfig,
   PowerUpType,
   World,
-  Entity,
   Vector,
 } from "./types";
 
@@ -42,6 +41,7 @@ const world: World = {
       position: { x: 0, y: -5 },
       velocity: { x: 0, y: 0 },
       health: 100,
+      maxHealth: 100,
       movement: MOVEMENT.DOWN,
       walkSpeed: 2,
     },
@@ -50,7 +50,8 @@ const world: World = {
     id: "player",
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
-    health: 100,
+    health: 10,
+    maxHealth: 150,
     walkSpeed: 3,
     movement: MOVEMENT.IDLE,
     animation: {
@@ -105,6 +106,10 @@ export function boundaryChecker(
     entity.position.y - entity2.position.y) <= 1
 }
 
+let lastTimeDamageTaken = Date.now();
+const HEALTH_INCREMENT = .1;
+const REGEN_START_TIME = 5000;
+
 function update() {
   let dt = lastUpdate ? (Date.now() - lastUpdate) / 1000 : 0;
 
@@ -117,6 +122,7 @@ function update() {
   world.enemies.forEach((enemy) => {
     if (boundaryChecker(world.player, enemy)) {
       world.player.health -= 10
+      lastTimeDamageTaken = Date.now();
     }
   })
 
@@ -162,6 +168,16 @@ function update() {
   if (!moving) {
     world.player.movement = MOVEMENT.IDLE;
   }
+
+  if (Date.now() - lastTimeDamageTaken > REGEN_START_TIME && world.player.health < world.player.maxHealth) {
+    if (world.player.health + HEALTH_INCREMENT > world.player.maxHealth) {
+      world.player.health = world.player.maxHealth;
+    } else {
+      world.player.health += HEALTH_INCREMENT;
+    }
+  }
+
+  console.debug('health', world.player.health);
 
   lastUpdate = Date.now();
 
