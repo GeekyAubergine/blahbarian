@@ -32,56 +32,62 @@ export const userInputFlags = {
   up: false,
   left: false,
   right: false,
-}
+};
+
+let lastUpdate: number | null = null;
 
 function update() {
+  let dt = lastUpdate ? (Date.now() - lastUpdate) / 1000 : 0;
+
   renderWorld(canvas, ctx, world);
 
   window.requestAnimationFrame(update);
 
   if (userInputFlags.up) {
-    world.player.position.y -= 0.1;
+    world.player.position.y -= 1 * dt;
     world.player.direction = Direction.UP;
   }
 
   if (userInputFlags.down) {
-    world.player.position.y += 0.1;
-    world.player.direction = Direction.DOWN;
+    world.player.position.y += 1 * dt;
+    world.player.direction = Direction.UP;
   }
 
   if (userInputFlags.left) {
-    world.player.position.x -= 0.1;
-    world.player.direction = Direction.LEFT
+    world.player.position.x -= 1 * dt;
+    world.player.direction = Direction.LEFT;
   }
 
   if (userInputFlags.right) {
-    world.player.position.x += 0.1;
-    world.player.direction = Direction.RIGHT
+    world.player.position.x += 1 * dt;
+    world.player.direction = Direction.RIGHT;
   }
+
+  lastUpdate = Date.now();
 }
 
 window.requestAnimationFrame(update);
 
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown') {
+window.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowDown") {
     userInputFlags.down = true;
-  } else if (e.key === 'ArrowUp') {
+  } else if (e.key === "ArrowUp") {
     userInputFlags.up = true;
-  } else if (e.key === 'ArrowLeft') {
+  } else if (e.key === "ArrowLeft") {
     userInputFlags.left = true;
-  } else if (e.key === 'ArrowRight') {
+  } else if (e.key === "ArrowRight") {
     userInputFlags.right = true;
   }
 });
 
-window.addEventListener('keyup', (e) => {
-  if (e.key === 'ArrowUp') {
+window.addEventListener("keyup", (e) => {
+  if (e.key === "ArrowUp") {
     userInputFlags.up = false;
-  } else if (e.key === 'ArrowDown') {
+  } else if (e.key === "ArrowDown") {
     userInputFlags.down = false;
-  } else if (e.key === 'ArrowLeft') {
+  } else if (e.key === "ArrowLeft") {
     userInputFlags.left = false;
-  } else if (e.key === 'ArrowRight') {
+  } else if (e.key === "ArrowRight") {
     userInputFlags.right = false;
   }
 });
