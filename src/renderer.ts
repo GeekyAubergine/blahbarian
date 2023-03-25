@@ -14,7 +14,7 @@ import { config } from "./main";
 import { sample } from 'lodash'
 import { spawnPointForEnemy } from "./utils";
 
-const TILE_SIZE = 64;
+export const TILE_SIZE = 64;
 const HEALTH_HEART_UNIT_AMOUNT = 20
 const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT
 

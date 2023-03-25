@@ -1,5 +1,5 @@
 import { spawnEntities } from "./enemies";
-import { renderWorld } from "./renderer";
+import { renderWorld, TILE_SIZE } from "./renderer";
 import "./sprites";
 import "./style.css";
 import { MOVEMENT, PowerUpConfig, PowerUpType, World, Vector } from "./types";
@@ -102,6 +102,7 @@ const userInputFlags = {
   up: false,
   left: false,
   right: false,
+  attack: false,
 };
 
 let lastUpdate: number | null = null;
@@ -153,6 +154,39 @@ function playerControl(world: World, dt: number) {
 
   if (!moving) {
     world.player.movement = MOVEMENT.IDLE;
+  }
+
+  if (userInputFlags.attack) {
+    world.enemies.forEach((enemy) => {
+      const { player } = world
+      const newPosition = { ...player.position }
+      switch (player.movement) {
+        case MOVEMENT.UP: {
+          newPosition.y -= TILE_SIZE
+          break
+        }
+        case MOVEMENT.DOWN: {
+          newPosition.y += TILE_SIZE
+          break
+        }
+        case MOVEMENT.RIGHT: {
+          newPosition.x += TILE_SIZE
+          break
+        }
+        case MOVEMENT.LEFT: {
+          newPosition.y += TILE_SIZE
+          break
+        }
+      }
+      console.log(newPosition)
+      if (boundaryChecker({position: newPosition}, enemy)) {
+        enemy.health -= 1000;
+        console.log(enemy)
+        if (enemy.health <= 0) {
+          world.enemies.filter((e) => e.id !== enemy.id)
+        }
+      }
+    })
   }
 
   if (world.player.health < 0) {
@@ -256,6 +290,8 @@ window.addEventListener("keydown", (e) => {
     userInputFlags.left = true;
   } else if (e.code === "ArrowRight" || e.code === "KeyD") {
     userInputFlags.right = true;
+  } else if (e.code === 'Space') {
+    userInputFlags.attack = true
   }
 });
 
@@ -268,5 +304,7 @@ window.addEventListener("keyup", (e) => {
     userInputFlags.left = false;
   } else if (e.code === "ArrowRight" || e.code === "KeyD") {
     userInputFlags.right = false;
+  } else if (e.code === 'Space') {
+    userInputFlags.attack = false
   }
 });
