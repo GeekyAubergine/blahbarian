@@ -177,8 +177,6 @@ function update() {
     }
   }
 
-  console.debug('health', world.player.health);
-
   lastUpdate = Date.now();
 
   tick++;
