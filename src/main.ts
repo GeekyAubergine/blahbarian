@@ -1,4 +1,5 @@
 import { renderWorld } from "./renderer";
+import sprites from "./sprites";
 import "./style.css";
 import { Direction, EnemyType, World } from "./types";
 
@@ -8,16 +9,7 @@ const ctx = canvas.getContext("2d")!;
 
 const world: World = {
   tiles: [],
-  enemies: [
-    {
-      id: "2",
-      type: EnemyType.CHAIR,
-      position: { x: 0, y: -5 },
-      velocity: { x: 0, y: 0 },
-      health: 100,
-      direction: Direction.DOWN,
-    },
-  ],
+  enemies: [],
   player: {
     id: "player",
     position: { x: 0, y: 0 },

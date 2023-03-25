@@ -1,3 +1,23 @@
+export interface SpriteSheetSprite {
+  id: string;
+  size: number;
+  sx: number;
+  sy: number;
+}
+
+export interface SpriteSheet {
+  id: string;
+  file: string;
+  sprites: Record<string, SpriteSheetSprite>;
+  width: number;
+  height: number;
+}
+
+export interface Animation {
+  spriteSheetId: string;
+  spriteIds: string[];
+}
+
 export enum Direction {
   UP = "UP",
   DOWN = "DOWN",
@@ -26,6 +46,7 @@ export interface Entity {
   velocity: Vector;
   health: number;
   direction: Direction;
+  animation?: Record<Direction, Animation>;
 }
 
 export interface Player extends Entity {}
