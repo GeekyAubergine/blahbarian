@@ -3,13 +3,15 @@ import {
   Enemy,
   EnemyType,
   Entity,
-  SpriteSheet,
   SpriteSheets,
   TileType,
   World,
   PowerUp,
+  PowerUpType,
 } from "./types";
 import { config } from "./main";
+import { sample } from 'lodash'
+import { spawnPointForEnemy } from "./utils";
 
 const TILE_SIZE = 64;
 
@@ -155,4 +157,24 @@ export function renderWorld(
   renderPlayer(ctx, SPRITE_SHEETS, animationFrame, world.player);
 
   ctx.resetTransform();
+
+  setInterval(() => {
+    renderRandomPowerup(ctx, world);
+  }, 1000);
+}
+
+export function renderRandomPowerup(ctx: CanvasRenderingContext2D, world: World): void {
+  // 1 in 5 chance of spawning
+  if (Math.random() < 0.8) {
+    return
+  }
+
+  const powerups: PowerUpType[] = Object.keys(config) as PowerUpType[];
+
+  const powerup: PowerUp = {
+    type: sample(powerups) as PowerUpType,
+    position: spawnPointForEnemy(world),
+  }
+
+  renderPowerUp(ctx, powerup);
 }

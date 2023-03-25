@@ -68,6 +68,8 @@ export interface World {
 
 export enum PowerUpType {
   KETCHUP = "KETCHUP",
+  DRUGS = "DRUGS",
+  BROCOLLI_BOMB = 'BROCOLLI_BOMB'
 }
 
 export interface PowerUpConfig {

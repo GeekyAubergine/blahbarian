@@ -29,6 +29,25 @@ export const config: Record<PowerUpType, PowerUpConfig> = {
       walkSpeed: 2,
     },
   },
+  [PowerUpType.DRUGS]: {
+    type: PowerUpType.DRUGS,
+    duration: 2,
+    radius: 8,
+    color: "green",
+    playerChanges: {
+      health: 40,
+      walkSpeed: 2,
+    },
+  },
+  [PowerUpType.BROCOLLI_BOMB]: {
+    type: PowerUpType.BROCOLLI_BOMB,
+    duration: 5,
+    radius: 8,
+    color: "yellow",
+    playerChanges: {
+      health: -100,
+    },
+  },
 };
 
 const world: World = {
@@ -37,6 +56,10 @@ const world: World = {
     {
       type: PowerUpType.KETCHUP,
       position: { x: 2, y: 2 },
+    },
+    {
+      type: PowerUpType.BROCOLLI_BOMB,
+      position: { x: 4, y: 4 },
     },
   ],
   enemies: [
@@ -151,7 +174,8 @@ function playerControl(world: World, dt: number) {
   }
 
   if (world.player.health < 0) {
-    throw Error("Oh no");
+    window.alert('Game over! Play again?');
+    window.location.reload();
   }
 
   if (
