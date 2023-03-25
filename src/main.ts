@@ -1,13 +1,28 @@
 import { renderWorld } from "./renderer";
 import "./style.css";
-import { Direction, EnemyType, World } from "./types";
+import { Direction, EnemyType, PowerUpConfig, PowerUpType, World } from "./types";
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
 const ctx = canvas.getContext("2d")!;
 
+export const config = {
+  [PowerUpType.KETCHUP]: {
+    type: PowerUpType.KETCHUP,
+    duration: -1,
+    radius: 8,
+    color: 'orange',
+  }
+} as const satisfies Record<PowerUpType, PowerUpConfig>
+
 const world: World = {
   tiles: [],
+  powerUps: [
+    {
+      type: PowerUpType.KETCHUP,
+      position: { x: 2, y: 2 },
+    }
+  ],
   enemies: [
     {
       id: "2",

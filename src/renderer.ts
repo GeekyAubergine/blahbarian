@@ -1,4 +1,5 @@
-import { Enemy, EnemyType, Entity, TileType, World } from "./types";
+import { config } from "./main";
+import { Enemy, EnemyType, Entity, PowerUp, TileType, World } from "./types";
 
 const TILE_SIZE = 64;
 
@@ -20,6 +21,12 @@ export function renderPlayer(ctx: CanvasRenderingContext2D, player: Entity) {
   ctx.fillStyle = "blue";
   const { x, y } = player.position;
   // render circle
+  ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+}
+
+export function renderPowerUp(ctx: CanvasRenderingContext2D, powerUp: PowerUp) {
+  ctx.fillStyle = config[powerUp.type].color
+  const { x, y } = powerUp.position
   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 }
 
@@ -77,6 +84,10 @@ export function renderWorld(
   world.enemies.forEach((enemy) => {
     renderEnemy(ctx, enemy);
   });
+
+  world.powerUps.forEach((powerUp) => {
+    renderPowerUp(ctx, powerUp)
+  })
 
   renderPlayer(ctx, world.player);
 

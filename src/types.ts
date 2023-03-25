@@ -38,4 +38,21 @@ export interface World {
   tiles: TileType[][];
   enemies: Enemy[];
   player: Player;
+  powerUps: PowerUp[]
+}
+
+export enum PowerUpType {
+  KETCHUP = "KETCHUP"
+}
+
+export interface PowerUpConfig {
+  duration: number;
+  radius: number;
+  type: PowerUpType;
+  color: string;
+}
+
+export interface PowerUp {
+  position: Vector
+  type: PowerUpType;
 }
