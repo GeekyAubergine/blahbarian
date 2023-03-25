@@ -306,6 +306,12 @@ function update() {
 
   lastUpdate = Date.now();
 
+  if (Date.now() - startTime > 60000) {
+    const video: HTMLVideoElement = document.querySelector('#video')!;
+    video.style.display = 'block';
+    return;
+  }
+
   tick++;
 }
 
