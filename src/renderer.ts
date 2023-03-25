@@ -6,10 +6,13 @@ import {
   TileType,
   World,
   PowerUp,
+  PowerUpType,
   Vector,
   Player,
 } from "./types";
 import { config } from "./main";
+import { sample } from 'lodash'
+import { spawnPointForEnemy } from "./utils";
 
 const TILE_SIZE = 64;
 const HEALTH_HEART_UNIT_AMOUNT = 20
@@ -180,7 +183,22 @@ export function renderWorld(
 
   ctx.resetTransform();
 
+  renderRandomPowerup(world);
   renderPlayerHealth(canvas, ctx, world.player);
+}
+
+export function renderRandomPowerup(world: World): void {
+  // 1 in 5 chance of spawning
+  if (Math.random() < 0.99) {
+    return
+  }
+
+  const powerups: PowerUpType[] = Object.keys(config) as PowerUpType[];
+
+  world.powerUps.push({
+    type: sample(powerups) as PowerUpType,
+    position: spawnPointForEnemy(world, 1, 1),
+  })
 }
 
 type HeartType = 'full' | 'half' | 'empty'
