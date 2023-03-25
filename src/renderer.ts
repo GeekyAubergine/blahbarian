@@ -14,12 +14,23 @@ import { config } from "./main";
 import { sample } from 'lodash'
 import { spawnPointForEnemy } from "./utils";
 
+<<<<<<< Updated upstream
 export const TILE_SIZE = 64;
 const HEALTH_HEART_UNIT_AMOUNT = 20
 const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT
+=======
+const TILE_SIZE = 64;
+const HEALTH_HEART_UNIT_AMOUNT = 20;
+const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT;
+>>>>>>> Stashed changes
 
 export function boundaryChecker(entity: Entity, entity2: Entity) {
-  return Math.hypot(entity.position.x - entity2.position.x, entity.position.y - entity2.position.y) <= 1
+  return (
+    Math.hypot(
+      entity.position.x - entity2.position.x,
+      entity.position.y - entity2.position.y
+    ) <= 1
+  );
 }
 
 export function renderSprite(
@@ -122,9 +133,11 @@ export function renderTile(
 ) {
   switch (tile) {
     case TileType.FLOOR:
-      ctx.fillStyle = "white";
+      ctx.fillStyle = "#C5CACE";
+      break
     case TileType.WALL:
       ctx.fillStyle = "black";
+      break
     default:
       break;
   }
@@ -187,6 +200,7 @@ export function renderWorld(
   renderPlayerHealth(canvas, ctx, world.player);
 }
 
+<<<<<<< Updated upstream
 export function renderRandomPowerup(world: World): void {
   // 1 in 5 chance of spawning
   if (Math.random() < 0.99) {
@@ -202,41 +216,58 @@ export function renderRandomPowerup(world: World): void {
 }
 
 type HeartType = 'full' | 'half' | 'empty'
+=======
+type HeartType = "full" | "half" | "empty";
+>>>>>>> Stashed changes
 
-function renderHeartSprite(ctx: CanvasRenderingContext2D, type: HeartType, position: Vector) {
-  const { x, y } = position
+function renderHeartSprite(
+  ctx: CanvasRenderingContext2D,
+  type: HeartType,
+  position: Vector
+) {
+  const { x, y } = position;
 
-  renderSprite(ctx, SPRITE_SHEETS, MEATBALL_SPRITE_SHEET.id, type, x, y)
+  renderSprite(ctx, SPRITE_SHEETS, MEATBALL_SPRITE_SHEET.id, type, x, y);
 }
 
-function renderPlayerHealth(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, player: Player): void {
+function renderPlayerHealth(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  player: Player
+): void {
   const { width } = canvas;
-  const { health } = player
+  const { health } = player;
 
   ctx.translate(0, 0);
 
-  const numOfFullHearts = health > 0 ? Math.floor(health / HEALTH_HEART_UNIT_AMOUNT) : 0
-  const hasHalfHeart = health > 0 ? (health / HEALTH_HEART_UNIT_AMOUNT) % 1 >= 0.5 : false
+  const numOfFullHearts =
+    health > 0 ? Math.floor(health / HEALTH_HEART_UNIT_AMOUNT) : 0;
+  const hasHalfHeart =
+    health > 0 ? (health / HEALTH_HEART_UNIT_AMOUNT) % 1 >= 0.5 : false;
 
   const healthPosition: Vector = {
     x: width * 0.65,
     y: TILE_SIZE * 0.5,
-  }
+  };
 
   for (let i = 0; i < numOfFullHearts; i = i + 1) {
-    renderHeartSprite(ctx, 'full', healthPosition)
-    healthPosition.x += TILE_SIZE
+    renderHeartSprite(ctx, "full", healthPosition);
+    healthPosition.x += TILE_SIZE;
   }
 
   if (hasHalfHeart) {
-    renderHeartSprite(ctx, 'half', healthPosition)
-    healthPosition.x += TILE_SIZE
+    renderHeartSprite(ctx, "half", healthPosition);
+    healthPosition.x += TILE_SIZE;
   }
 
-  let renderedSpaces = numOfFullHearts + (hasHalfHeart ? 1 : 0)
+  let renderedSpaces = numOfFullHearts + (hasHalfHeart ? 1 : 0);
 
-  for (renderedSpaces; renderedSpaces < TOTAL_AVAILABLE_HEARTS; renderedSpaces += 1) {
-    renderHeartSprite(ctx, 'empty', healthPosition);
-    healthPosition.x += TILE_SIZE
+  for (
+    renderedSpaces;
+    renderedSpaces < TOTAL_AVAILABLE_HEARTS;
+    renderedSpaces += 1
+  ) {
+    renderHeartSprite(ctx, "empty", healthPosition);
+    healthPosition.x += TILE_SIZE;
   }
 }
