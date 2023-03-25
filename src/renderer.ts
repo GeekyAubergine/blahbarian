@@ -7,9 +7,9 @@ import {
   SpriteSheets,
   TileType,
   World,
+  PowerUp,
 } from "./types";
 import { config } from "./main";
-import { Enemy, EnemyType, Entity, PowerUp, TileType, World } from "./types";
 
 const TILE_SIZE = 64;
 
