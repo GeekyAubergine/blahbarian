@@ -50,7 +50,7 @@ const world: World = {
     id: "player",
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
-    health: 100,
+    health: 40,
     walkSpeed: 3,
     movement: MOVEMENT.IDLE,
     animation: {
