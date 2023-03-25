@@ -18,10 +18,26 @@ const world: World = {
   },
 };
 
-function render() {
-  renderWorld(canvas, ctx, world);
-
-  window.requestAnimationFrame(render);
+export const userInputFlags = {
+  down: false,
 }
 
-window.requestAnimationFrame(render);
+function update() {
+  renderWorld(canvas, ctx, world);
+
+  window.requestAnimationFrame(update);
+}
+
+window.requestAnimationFrame(update);
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown') {
+    userInputFlags.down = true;
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowDown') {
+    userInputFlags.down = false;
+  }
+});

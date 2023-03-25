@@ -78,6 +78,3 @@ export function renderWorld(
 
   ctx.resetTransform();
 }
-
-window.addEventListener('keydown', (e) => {
-})
