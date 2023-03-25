@@ -7,14 +7,14 @@ export const PLAYER_SPRITE_SHEET: SpriteSheet = {
   sprites: {
     "player-down-1": {
       id: "player-down-1",
-      size: 16,
+      size: 64,
       sx: 0,
       sy: 0,
     },
     "player-down-2": {
       id: "player-down-2",
-      size: 16,
-      sx: 16,
+      size: 64,
+      sx: 1,
       sy: 0,
     },
   },

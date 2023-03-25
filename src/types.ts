@@ -20,7 +20,8 @@ export interface Animation {
   spriteIds: string[];
 }
 
-export enum Direction {
+export enum MOVEMENT {
+  IDLE = "IDLE",
   UP = "UP",
   DOWN = "DOWN",
   LEFT = "LEFT",
@@ -47,8 +48,8 @@ export interface Entity {
   position: Vector;
   velocity: Vector;
   health: number;
-  direction: Direction;
-  animation?: Record<Direction, Animation>;
+  movement: MOVEMENT;
+  animation?: Record<MOVEMENT, Animation>;
 }
 
 export interface Player extends Entity {}

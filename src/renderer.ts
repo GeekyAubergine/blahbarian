@@ -33,8 +33,8 @@ export function renderSprite(
 
   ctx.drawImage(
     image as CanvasImageSource,
-    sprite.sx,
-    sprite.sy,
+    sprite.sx * sprite.size,
+    sprite.sy * sprite.size,
     sprite.size,
     sprite.size,
     x,
@@ -61,17 +61,26 @@ export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
 export function renderPlayer(
   ctx: CanvasRenderingContext2D,
   spiteSheets: SpriteSheets,
+  animationFrame: number,
   player: Entity
 ) {
   ctx.fillStyle = "blue";
   const { x, y } = player.position;
   // render circle
   //   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  const frames = player.animation?.DOWN.spriteIds;
+
+  const frame = frames?.[animationFrame % frames.length];
+
+  if (!frame) {
+    return;
+  }
+
   renderSprite(
     ctx,
     spiteSheets,
     "player",
-    "player-down-1",
+    frame,
     x * TILE_SIZE,
     y * TILE_SIZE
   );
@@ -98,8 +107,11 @@ export function renderTile(
 export function renderWorld(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
+  tick: number,
   world: World
 ) {
+  const animationFrame = Math.floor(tick / 10);
+
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
@@ -135,7 +147,7 @@ export function renderWorld(
     renderEnemy(ctx, enemy);
   });
 
-  renderPlayer(ctx, SPRITE_SHEETS, world.player);
+  renderPlayer(ctx, SPRITE_SHEETS, animationFrame, world.player);
 
   ctx.resetTransform();
 }
