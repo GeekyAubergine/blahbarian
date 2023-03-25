@@ -30,6 +30,8 @@ export enum MOVEMENT {
 
 export enum EnemyType {
   CHAIR = "CHAIR",
+  WARDROBE = "WARDROBE",
+  TABLE = "TABLE",
 }
 
 export enum TileType {
@@ -52,12 +54,14 @@ export interface Entity {
   walkSpeed: number;
   movement: MOVEMENT;
   animation?: Record<MOVEMENT, Animation>;
+  animationStartingOffset?: number;
 }
 
 export interface Player extends Entity {}
 
 export interface Enemy extends Entity {
   type: EnemyType;
+  spriteSheetName: string;
 }
 export interface World {
   tiles: TileType[][];
@@ -77,7 +81,7 @@ export interface PowerUpConfig {
   radius: number;
   type: PowerUpType;
   color: string;
-  playerChanges: Partial<Player>
+  playerChanges: Partial<Player>;
 }
 
 export interface PowerUp {

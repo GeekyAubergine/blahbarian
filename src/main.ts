@@ -1,3 +1,4 @@
+import { spawnEntities } from "./enemies";
 import { renderWorld } from "./renderer";
 import "./sprites";
 import "./style.css";
@@ -62,18 +63,7 @@ const world: World = {
       position: { x: 4, y: 4 },
     },
   ],
-  enemies: [
-    {
-      id: "2",
-      type: EnemyType.CHAIR,
-      position: { x: 0, y: -5 },
-      velocity: { x: 0, y: 0 },
-      health: 100,
-      maxHealth: 100,
-      movement: MOVEMENT.DOWN,
-      walkSpeed: 2,
-    },
-  ],
+  enemies: [],
   player: {
     id: "player",
     position: { x: 0, y: 0 },
@@ -190,21 +180,6 @@ function playerControl(world: World, dt: number) {
   }
 }
 
-function spawnEntities(world: World, dt: number) {
-  if (dt % 60 && world.enemies.length < 50) {
-    world.enemies.push({
-      id: String(world.enemies.length + 1),
-      type: EnemyType.CHAIR,
-      position: spawnPointForEnemy(world),
-      velocity: { x: 0, y: 0 },
-      health: 100,
-      maxHealth: 100,
-      movement: MOVEMENT.DOWN,
-      walkSpeed: 2,
-    })
-  }
-}
-
 function updateEntities(world: World, dt: number) {
   world.enemies.forEach((enemy) => {
     const velocity = moveTowardsPlayer(world, dt, enemy);
@@ -213,10 +188,12 @@ function updateEntities(world: World, dt: number) {
 
   world.enemies.forEach((enemy) => {
     if (dt % 60) {
-      const newPosition = moveTowardsPlayer(world, dt, enemy)
-      enemy.position.x += newPosition.x
-      enemy.position.y += newPosition.y
+      const newPosition = moveTowardsPlayer(world, dt, enemy);
+      enemy.position.x += newPosition.x;
+      enemy.position.y += newPosition.y;
+      enemy.movement = movementForVector(newPosition);
     }
+    
     if (boundaryChecker(world.player, enemy)) {
       world.player.health -= 10;
       lastTimeDamageTaken = Date.now();
