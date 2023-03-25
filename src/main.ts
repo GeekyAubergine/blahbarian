@@ -16,6 +16,7 @@ const world: World = {
       velocity: { x: 0, y: 0 },
       health: 100,
       direction: Direction.DOWN,
+      walkSpeed: 2,
     },
   ],
   player: {
@@ -24,10 +25,11 @@ const world: World = {
     velocity: { x: 0, y: 0 },
     health: 100,
     direction: Direction.UP,
+    walkSpeed: 3,
   },
 };
 
-export const userInputFlags = {
+const userInputFlags = {
   down: false,
   up: false,
   left: false,
@@ -44,22 +46,22 @@ function update() {
   window.requestAnimationFrame(update);
 
   if (userInputFlags.up) {
-    world.player.position.y -= 1 * dt;
+    world.player.position.y -= world.player.walkSpeed * dt;
     world.player.direction = Direction.UP;
   }
 
   if (userInputFlags.down) {
-    world.player.position.y += 1 * dt;
+    world.player.position.y += world.player.walkSpeed * dt;
     world.player.direction = Direction.UP;
   }
 
   if (userInputFlags.left) {
-    world.player.position.x -= 1 * dt;
+    world.player.position.x -= world.player.walkSpeed * dt;
     world.player.direction = Direction.LEFT;
   }
 
   if (userInputFlags.right) {
-    world.player.position.x += 1 * dt;
+    world.player.position.x += world.player.walkSpeed * dt;
     world.player.direction = Direction.RIGHT;
   }
 

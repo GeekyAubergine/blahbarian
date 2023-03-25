@@ -26,6 +26,7 @@ export interface Entity {
   velocity: Vector;
   health: number;
   direction: Direction;
+  walkSpeed: number,
 }
 
 export interface Player extends Entity {}
