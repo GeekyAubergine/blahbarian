@@ -77,13 +77,133 @@ export const WARDROBE_SPRITE_SHEET: SpriteSheet = {
     },
     "wardrobe-3": {
       id: "wardrobe-3",
-      sx: 0,
-      sy: 1,
+      sx: 2,
+      sy: 0,
     },
     "wardrobe-4": {
       id: "wardrobe-4",
+      sx: 3,
+      sy: 0,
+    },
+    "wardrobe-5": {
+      id: "wardrobe-5",
+      sx: 4,
+      sy: 0,
+    },
+    "wardrobe-6": {
+      id: "wardrobe-6",
+      sx: 5,
+      sy: 0,
+    },
+  },
+  width: 128,
+  height: 256,
+};
+
+export const SWORD_SPRITE: SpriteSheet = {
+  id: "sword",
+  image: document.getElementById("sword"),
+  spriteSize: 128,
+  sprites: {
+    "sword-up-1": {
+      id: "sword-up-1",
+      sx: 0,
+      sy: 0,
+    },
+    "sword-up-2": {
+      id: "sword-up-2",
+      sx: 1,
+      sy: 0,
+    },
+    "sword-up-3": {
+      id: "sword-up-3",
+      sx: 2,
+      sy: 0,
+    },
+    "sword-up-4": {
+      id: "sword-up-4",
+      sx: 3,
+      sy: 0,
+    },
+    "sword-up-5": {
+      id: "sword-up-5",
+      sx: 4,
+      sy: 0,
+    },
+    "sword-down-1": {
+      id: "sword-down-1",
+      sx: 0,
+      sy: 1,
+    },
+    "sword-down-2": {
+      id: "sword-down-2",
       sx: 1,
       sy: 1,
+    },
+    "sword-down-3": {
+      id: "sword-down-3",
+      sx: 2,
+      sy: 1,
+    },
+    "sword-down-4": {
+      id: "sword-down-4",
+      sx: 3,
+      sy: 1,
+    },
+    "sword-down-5": {
+      id: "sword-down-5",
+      sx: 4,
+      sy: 1,
+    },
+    "sword-left-1": {
+      id: "sword-left-1",
+      sx: 0,
+      sy: 3,
+    },
+    "sword-left-2": {
+      id: "sword-left-2",
+      sx: 1,
+      sy: 3,
+    },
+    "sword-left-3": {
+      id: "sword-left-3",
+      sx: 2,
+      sy: 3,
+    },
+    "sword-left-4": {
+      id: "sword-left-4",
+      sx: 3,
+      sy: 3,
+    },
+    "sword-left-5": {
+      id: "sword-left-5",
+      sx: 4,
+      sy: 3,
+    },
+    "sword-right-1": {
+      id: "sword-right-1",
+      sx: 0,
+      sy: 2,
+    },
+    "sword-right-2": {
+      id: "sword-right-2",
+      sx: 1,
+      sy: 2,
+    },
+    "sword-right-3": {
+      id: "sword-right-3",
+      sx: 2,
+      sy: 2,
+    },
+    "sword-right-4": {
+      id: "sword-right-4",
+      sx: 3,
+      sy: 2,
+    },
+    "sword-right-5": {
+      id: "sword-right-5",
+      sx: 4,
+      sy: 2,
     },
   },
   width: 128,
@@ -115,7 +235,6 @@ export const MEATBALL_SPRITE_SHEET: SpriteSheet = {
   height: 256,
 };
 
-
 // console.log({ sharkSprites });
 
 // let image = new Image();
@@ -127,6 +246,7 @@ export const SPRITE_SHEETS: Record<string, SpriteSheet> = {
   [PLAYER_SPRITE_SHEET.id]: PLAYER_SPRITE_SHEET,
   [MEATBALL_SPRITE_SHEET.id]: MEATBALL_SPRITE_SHEET,
   [WARDROBE_SPRITE_SHEET.id]: WARDROBE_SPRITE_SHEET,
+  [SWORD_SPRITE.id]: SWORD_SPRITE,
 };
 
 // for (const spriteSheet of Object.values(SPRITE_SHEETS)) {

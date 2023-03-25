@@ -87,6 +87,7 @@ const world: World = {
         spriteIds: ["player-right-1", "player-right-2"],
       },
     },
+    swinging: false,
   },
 };
 
@@ -150,6 +151,7 @@ function playerControl(world: World, dt: number) {
   }
 
   if (userInputFlags.attack) {
+    world.player.swinging = true;
     world.enemies.forEach((enemy) => {
       const { player } = world;
       const newPosition = { ...player.position };
@@ -178,6 +180,10 @@ function playerControl(world: World, dt: number) {
         }
       }
     });
+  } else {
+    setTimeout(() => {
+      world.player.swinging = false;
+    }, 1000);
   }
 
   if (world.player.health < 0 && !gameOver) {
