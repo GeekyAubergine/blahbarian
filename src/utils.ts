@@ -1,6 +1,6 @@
 import { Entity, MOVEMENT, Vector, World } from "./types";
 
-const ZERO_SPEED_THRESHOLD = 0.05;
+const ZERO_SPEED_THRESHOLD = 0.005;
 const MIN_SPAWN_DISTANCE = 18;
 const MAX_SPAWN_DISTANCE = 24;
 
@@ -24,8 +24,8 @@ export function spawnPointForEnemy(
 }
 
 /**
-  * @returns Vector to be added to the current position
-**/
+ * @returns Vector to be added to the current position
+ **/
 export function moveTowardsPlayer(
   world: World,
   dt: number,
@@ -83,4 +83,8 @@ export function movementForVector(vector: Vector): MOVEMENT {
       return MOVEMENT.UP;
     }
   }
+}
+
+export function exhaust(value: never): never {
+  throw new Error(`Unexpected value: ${value}`);
 }
