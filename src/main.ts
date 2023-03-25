@@ -21,6 +21,7 @@ const world: World = {
 export const userInputFlags = {
   down: false,
   up: false,
+  left: false,
 }
 
 function update() {
@@ -34,14 +35,19 @@ window.requestAnimationFrame(update);
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') {
     userInputFlags.down = true;
-  }
-  if (e.key === 'ArrowUp') {
+  } else if (e.key === 'ArrowUp') {
     userInputFlags.up = true;
+  } else if (e.key === 'ArrowLeft') {
+    userInputFlags.left = true;
   }
 });
 
 window.addEventListener('keyup', (e) => {
   if (e.key === 'ArrowUp') {
     userInputFlags.up = false;
+  } else if (e.key === 'ArrowUp') {
+    userInputFlags.up = false;
+  } else if (e.key === 'ArrowLeft') {
+    userInputFlags.left = false;
   }
 });
