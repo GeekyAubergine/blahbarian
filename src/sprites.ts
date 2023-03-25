@@ -77,23 +77,13 @@ export const WARDROBE_SPRITE_SHEET: SpriteSheet = {
     },
     "wardrobe-3": {
       id: "wardrobe-3",
-      sx: 2,
-      sy: 0,
+      sx: 0,
+      sy: 1,
     },
     "wardrobe-4": {
       id: "wardrobe-4",
-      sx: 3,
-      sy: 0,
-    },
-    "wardrobe-5": {
-      id: "wardrobe-5",
-      sx: 4,
-      sy: 0,
-    },
-    "wardrobe-6": {
-      id: "wardrobe-6",
-      sx: 5,
-      sy: 0,
+      sx: 1,
+      sy: 1,
     },
   },
   width: 128,
