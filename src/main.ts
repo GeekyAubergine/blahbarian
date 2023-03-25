@@ -1,6 +1,13 @@
 import { renderWorld } from "./renderer";
+import "./sprites";
 import "./style.css";
-import { Direction, EnemyType, PowerUpConfig, PowerUpType, World } from "./types";
+import {
+  MOVEMENT,
+  EnemyType,
+  PowerUpConfig,
+  PowerUpType,
+  World,
+} from "./types";
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
@@ -11,9 +18,9 @@ export const config = {
     type: PowerUpType.KETCHUP,
     duration: -1,
     radius: 8,
-    color: 'orange',
-  }
-} as const satisfies Record<PowerUpType, PowerUpConfig>
+    color: "orange",
+  },
+} as const satisfies Record<PowerUpType, PowerUpConfig>;
 
 const world: World = {
   tiles: [],
@@ -21,7 +28,7 @@ const world: World = {
     {
       type: PowerUpType.KETCHUP,
       position: { x: 2, y: 2 },
-    }
+    },
   ],
   enemies: [
     {
@@ -30,7 +37,7 @@ const world: World = {
       position: { x: 0, y: -5 },
       velocity: { x: 0, y: 0 },
       health: 100,
-      direction: Direction.DOWN,
+      movement: MOVEMENT.DOWN,
       walkSpeed: 2,
     },
   ],
@@ -39,8 +46,30 @@ const world: World = {
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
     health: 100,
-    direction: Direction.UP,
     walkSpeed: 3,
+    movement: MOVEMENT.IDLE,
+    animation: {
+      [MOVEMENT.IDLE]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-down-1", "player-down-2"],
+      },
+      [MOVEMENT.UP]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-up-1", "player-up-2"],
+      },
+      [MOVEMENT.DOWN]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-down-1", "player-down-2"],
+      },
+      [MOVEMENT.LEFT]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-left-1", "player-left-2"],
+      },
+      [MOVEMENT.RIGHT]: {
+        spriteSheetId: "player",
+        spriteIds: ["player-right-1", "player-right-2"],
+      },
+    },
   },
 };
 
@@ -52,59 +81,62 @@ const userInputFlags = {
 };
 
 let lastUpdate: number | null = null;
+let tick = 0;
 
 function update() {
   let dt = lastUpdate ? (Date.now() - lastUpdate) / 1000 : 0;
 
-  renderWorld(canvas, ctx, world);
+  renderWorld(canvas, ctx, tick, world);
 
   window.requestAnimationFrame(update);
 
   if (userInputFlags.up) {
     world.player.position.y -= world.player.walkSpeed * dt;
-    world.player.direction = Direction.UP;
+    world.player.movement = MOVEMENT.UP;
   }
 
   if (userInputFlags.down) {
     world.player.position.y += world.player.walkSpeed * dt;
-    world.player.direction = Direction.UP;
+    world.player.movement = MOVEMENT.UP;
   }
 
   if (userInputFlags.left) {
     world.player.position.x -= world.player.walkSpeed * dt;
-    world.player.direction = Direction.LEFT;
+    world.player.movement = MOVEMENT.LEFT;
   }
 
   if (userInputFlags.right) {
     world.player.position.x += world.player.walkSpeed * dt;
-    world.player.direction = Direction.RIGHT;
+    world.player.movement = MOVEMENT.RIGHT;
   }
 
   lastUpdate = Date.now();
+
+  tick++;
 }
 
 window.requestAnimationFrame(update);
 
-window.addEventListener('keydown', (e) => {
-  if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+window.addEventListener("keydown", (e) => {
+  if (e.code === "ArrowDown" || e.code === "KeyS") {
     userInputFlags.down = true;
-  } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+  } else if (e.code === "ArrowUp" || e.code === "KeyW") {
     userInputFlags.up = true;
-  } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+  } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
     userInputFlags.left = true;
-  } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+  } else if (e.code === "ArrowRight" || e.code === "KeyD") {
     userInputFlags.right = true;
   }
 });
 
-window.addEventListener('keyup', (e) => {
-  if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+window.addEventListener("keyup", (e) => {
+  if (e.code === "ArrowUp" || e.code === "KeyW") {
     userInputFlags.up = false;
-  } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+  } else if (e.code === "ArrowDown" || e.code === "KeyS") {
     userInputFlags.down = false;
-  } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+  } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
     userInputFlags.left = false;
-  } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+  } else if (e.code === "ArrowRight" || e.code === "KeyD") {
     userInputFlags.right = false;
   }
 });

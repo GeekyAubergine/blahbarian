@@ -1,3 +1,13 @@
+import { SPRITE_SHEETS } from "./sprites";
+import {
+  Enemy,
+  EnemyType,
+  Entity,
+  SpriteSheet,
+  SpriteSheets,
+  TileType,
+  World,
+} from "./types";
 import { config } from "./main";
 import { Enemy, EnemyType, Entity, PowerUp, TileType, World } from "./types";
 
@@ -5,6 +15,39 @@ const TILE_SIZE = 64;
 
 export function boundaryChecker(entity: Entity, entity2: Entity) {
   return Math.hypot(entity.position.x - entity2.position.x, entity.position.y - entity2.position.y) <= 1
+}
+
+export function renderSprite(
+  ctx: CanvasRenderingContext2D,
+  spiteSheets: SpriteSheets,
+  spriteSheetId: string,
+  spriteId: string,
+  x: number,
+  y: number
+) {
+  // render sprite
+  const spriteSheet = spiteSheets[spriteSheetId];
+  const sprite = spriteSheet.sprites[spriteId];
+
+  const scale = TILE_SIZE / sprite.size;
+
+  const { image } = spriteSheet;
+
+  if (!image) {
+    throw new Error("Image not found");
+  }
+
+  ctx.drawImage(
+    image as CanvasImageSource,
+    sprite.sx * sprite.size,
+    sprite.sy * sprite.size,
+    sprite.size,
+    sprite.size,
+    x,
+    y,
+    sprite.size * scale,
+    sprite.size * scale
+  );
 }
 
 export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
@@ -21,11 +64,32 @@ export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 }
 
-export function renderPlayer(ctx: CanvasRenderingContext2D, player: Entity) {
+export function renderPlayer(
+  ctx: CanvasRenderingContext2D,
+  spiteSheets: SpriteSheets,
+  animationFrame: number,
+  player: Entity
+) {
   ctx.fillStyle = "blue";
   const { x, y } = player.position;
   // render circle
-  ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  //   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  const frames = player.animation?.DOWN.spriteIds;
+
+  const frame = frames?.[animationFrame % frames.length];
+
+  if (!frame) {
+    return;
+  }
+
+  renderSprite(
+    ctx,
+    spiteSheets,
+    "player",
+    frame,
+    x * TILE_SIZE,
+    y * TILE_SIZE
+  );
 }
 
 export function renderPowerUp(ctx: CanvasRenderingContext2D, powerUp: PowerUp) {
@@ -55,8 +119,14 @@ export function renderTile(
 export function renderWorld(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
+  tick: number,
   world: World
 ) {
+  const animationFrame = Math.floor(tick / 10);
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
   const { width, height } = canvas;
   const { player } = world;
   const { position: playerPosition } = player;
@@ -93,7 +163,7 @@ export function renderWorld(
     renderPowerUp(ctx, powerUp)
   })
 
-  renderPlayer(ctx, world.player);
+  renderPlayer(ctx, SPRITE_SHEETS, animationFrame, world.player);
 
   world.enemies.forEach((enemy) => {
     console.log(boundaryChecker(world.player, enemy))
