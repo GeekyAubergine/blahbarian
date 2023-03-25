@@ -1,26 +1,26 @@
-enum Direction {
+export enum Direction {
   UP = "UP",
   DOWN = "DOWN",
   LEFT = "LEFT",
   RIGHT = "RIGHT",
 }
 
-enum EnemyType {
+export enum EnemyType {
   CHAIR = "CHAIR",
 }
 
-enum TileType {
-    FLOOR = "FLOOR",
-    WALL = "WALL",
-    DOOR = "DOOR",
+export enum TileType {
+  FLOOR = "FLOOR",
+  WALL = "WALL",
+  DOOR = "DOOR",
 }
 
-interface Vector {
+export interface Vector {
   x: number;
   y: number;
 }
 
-interface Entity {
+export interface Entity {
   id: string;
   position: Vector;
   velocity: Vector;
@@ -28,18 +28,13 @@ interface Entity {
   direction: Direction;
 }
 
-interface Player extends Entity {}
+export interface Player extends Entity {}
 
-interface Enemy extends Entity {
-    type: EnemyType;
+export interface Enemy extends Entity {
+  type: EnemyType;
 }
-
-interface Room {
-  entities: Entity[];
-  position: Vector;
-}
-
-interface World {
-  rooms: Room[];
+export interface World {
+  tiles: TileType[][];
+  enemies: Enemy[];
   player: Player;
 }
