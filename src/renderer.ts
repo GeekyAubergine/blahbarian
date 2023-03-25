@@ -46,18 +46,36 @@ export function renderSprite(
   );
 }
 
-export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
-  switch (enemy.type) {
-    case EnemyType.CHAIR:
-      ctx.fillStyle = "red";
-      break;
-    default:
-      break;
+export function renderEnemy(
+  ctx: CanvasRenderingContext2D,
+  spiteSheets: SpriteSheets,
+  animationFrame: number,
+  enemy: Enemy
+) {
+  const { x, y } = enemy.position;
+
+  //   ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  const frames = enemy.animation?.[enemy.movement].spriteIds;
+
+  const frame =
+    frames?.[
+      (animationFrame + (enemy.animationStartingOffset ?? 0)) % frames.length
+    ];
+
+  if (!frame) {
+    return;
   }
 
-  const { x, y } = enemy.position;
-  // render circle
-  ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+  renderSprite(
+    ctx,
+    spiteSheets,
+    enemy.spriteSheetName,
+    frame,
+    x * TILE_SIZE,
+    y * TILE_SIZE
+  );
+
+  ctx.fillStyle = "pink";
 }
 
 export function renderPlayer(
@@ -145,7 +163,7 @@ export function renderWorld(
   }
 
   world.enemies.forEach((enemy) => {
-    renderEnemy(ctx, enemy);
+    renderEnemy(ctx, SPRITE_SHEETS, animationFrame, enemy);
   });
 
   world.powerUps.forEach((powerUp) => {
