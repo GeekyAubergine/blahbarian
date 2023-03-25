@@ -32,6 +32,8 @@ function update() {
 
   if (userInputFlags.up) {
     world.player.position.y -= 0.1;
+  } else if (userInputFlags.down) {
+    world.player.position.y += 0.1;
   }
 }
 
