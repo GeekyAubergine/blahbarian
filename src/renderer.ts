@@ -1,6 +1,6 @@
 import { Enemy, EnemyType, Entity, TileType, World } from "./types";
 
-const TILE_SIZE = 16;
+const TILE_SIZE = 64;
 
 export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
   switch (enemy.type) {
@@ -47,6 +47,8 @@ export function renderWorld(
   world: World
 ) {
   const { width, height } = canvas;
+  const { player } = world;
+  const { position: playerPosition } = player;
 
   const renderWorldWidth = Math.floor(width / TILE_SIZE);
   const renderWorldHeight = Math.floor(height / TILE_SIZE);
@@ -54,21 +56,23 @@ export function renderWorld(
   ctx.fillStyle = "grey";
   ctx.fillRect(0, 0, width, height);
 
-  // set ctx to center of canvas
+  ctx.translate(
+    width / 2 - playerPosition.x * TILE_SIZE,
+    height / 2 - playerPosition.y * TILE_SIZE
+  );
 
-  ctx.translate(width / 2 + TILE_SIZE / 2, height / 2 + TILE_SIZE / 2);
+  const leftEdgeOrScreen = Math.floor(playerPosition.x - renderWorldWidth / 2);
+  const rightEdgeOrScreen = Math.floor(playerPosition.x + renderWorldWidth / 2);
+  const topEdgeOrScreen = Math.floor(playerPosition.y - renderWorldHeight / 2);
+  const bottomEdgeOrScreen = Math.floor(
+    playerPosition.y + renderWorldHeight / 2
+  );
 
-  for (let y = -renderWorldHeight / 2; y < renderWorldHeight / 2; y++) {
-    for (let x = -renderWorldWidth / 2; x < renderWorldWidth / 2; x++) {
+  for (let y = topEdgeOrScreen - 1; y < bottomEdgeOrScreen + 2; y++) {
+    for (let x = leftEdgeOrScreen - 1; x < rightEdgeOrScreen + 2; x++) {
       renderTile(ctx, TileType.FLOOR, x, y);
     }
   }
-
-  //   tiles.forEach((row, y) => {
-  //     row.forEach((tile, x) => {
-  //       renderTile(ctx, tile, x + position.x, y + position.y);
-  //     });
-  //   });
 
   world.enemies.forEach((enemy) => {
     renderEnemy(ctx, enemy);
