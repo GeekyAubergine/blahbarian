@@ -29,7 +29,7 @@ export interface Entity {
   walkSpeed: number,
 }
 
-export interface Player extends Entity {}
+export interface Player extends Entity { }
 
 export interface Enemy extends Entity {
   type: EnemyType;
@@ -56,3 +56,15 @@ export interface PowerUp {
   position: Vector
   type: PowerUpType;
 }
+
+export enum WeaponType {
+  PROJECTILE = 'PROJECTILE',
+  MELEE = 'MELEE',
+}
+
+export type Weapon<TWeaponType extends WeaponType, TExtras =TWeaponType extends WeaponType.MELEE ? {} : TWeaponType extends WeaponType.PROJECTILE ? { speed: number } : never
+> = {
+  type: TWeaponType;
+  damage: number
+} & TExtras
+
