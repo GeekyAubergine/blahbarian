@@ -68,26 +68,26 @@ function update() {
 
 window.requestAnimationFrame(update);
 
-window.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowDown") {
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'ArrowDown' || e.code === 'KeyS') {
     userInputFlags.down = true;
-  } else if (e.key === "ArrowUp") {
+  } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
     userInputFlags.up = true;
-  } else if (e.key === "ArrowLeft") {
+  } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
     userInputFlags.left = true;
-  } else if (e.key === "ArrowRight") {
+  } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
     userInputFlags.right = true;
   }
 });
 
-window.addEventListener("keyup", (e) => {
-  if (e.key === "ArrowUp") {
+window.addEventListener('keyup', (e) => {
+  if (e.code === 'ArrowUp' || e.code === 'KeyW') {
     userInputFlags.up = false;
-  } else if (e.key === "ArrowDown") {
+  } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
     userInputFlags.down = false;
-  } else if (e.key === "ArrowLeft") {
+  } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
     userInputFlags.left = false;
-  } else if (e.key === "ArrowRight") {
+  } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
     userInputFlags.right = false;
   }
 });
