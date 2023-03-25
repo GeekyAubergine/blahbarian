@@ -44,16 +44,7 @@ export const config: Record<PowerUpType, PowerUpConfig> = {
 
 const world: World = {
   tiles: [],
-  powerUps: [
-    {
-      type: PowerUpType.KETCHUP,
-      position: { x: 2, y: 2 },
-    },
-    {
-      type: PowerUpType.BROCOLLI_BOMB,
-      position: { x: 4, y: 4 },
-    },
-  ],
+  powerUps: [],
   enemies: [],
   player: {
     id: "player",
@@ -243,7 +234,7 @@ function updateEntities(world: World, dt: number) {
               (config[powerUp.type].playerChanges?.[prop] || 0) +
               world.player[prop];
 
-            if (health > 100) {
+            if (health > world.player.maxHealth) {
               health = 100;
             }
 
