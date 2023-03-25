@@ -29,6 +29,10 @@ function update() {
   renderWorld(canvas, ctx, world);
 
   window.requestAnimationFrame(update);
+
+  if (userInputFlags.up) {
+    world.player.position.y -= 0.1;
+  }
 }
 
 window.requestAnimationFrame(update);
@@ -47,7 +51,6 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('keyup', (e) => {
   if (e.key === 'ArrowUp') {
-    userInputFlags.up = false;
   } else if (e.key === 'ArrowUp') {
     userInputFlags.up = false;
   } else if (e.key === 'ArrowLeft') {
