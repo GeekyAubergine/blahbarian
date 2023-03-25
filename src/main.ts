@@ -20,6 +20,7 @@ import lodash from 'lodash';
 const INVINICIBILITY_TIME = 500;
 
 let gameOver: boolean = false;
+let won = false;
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
@@ -220,7 +221,9 @@ function playerControl(world: World, dt: number) {
   if (world.player.health < 0 && !gameOver) {
     gameOver = true;
     window.alert("Game over! Play again?");
-    window.location.reload();
+    if (!won) {
+      window.location.reload();
+    }
   }
 
   if (
@@ -315,6 +318,7 @@ function update() {
   if (Date.now() - startTime > 60000) {
     const video: HTMLVideoElement = document.querySelector('#video')!;
     video.style.display = 'block';
+    won = true;
     return;
   }
 
