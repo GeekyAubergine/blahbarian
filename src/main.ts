@@ -22,6 +22,7 @@ export const userInputFlags = {
   down: false,
   up: false,
   left: false,
+  right: false,
 }
 
 function update() {
@@ -39,6 +40,8 @@ window.addEventListener('keydown', (e) => {
     userInputFlags.up = true;
   } else if (e.key === 'ArrowLeft') {
     userInputFlags.left = true;
+  } else if (e.key === 'ArrowRight') {
+    userInputFlags.right = true;
   }
 });
 
@@ -49,5 +52,7 @@ window.addEventListener('keyup', (e) => {
     userInputFlags.up = false;
   } else if (e.key === 'ArrowLeft') {
     userInputFlags.left = false;
+  } else if (e.key === 'ArrowRight') {
+    userInputFlags.right = false;
   }
 });
