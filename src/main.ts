@@ -4,7 +4,6 @@ import "./sprites";
 import "./style.css";
 import {
   MOVEMENT,
-  EnemyType,
   PowerUpConfig,
   PowerUpType,
   World,
@@ -13,7 +12,6 @@ import {
 import {
   movementForVector,
   moveTowardsPlayer,
-  spawnPointForEnemy,
 } from "./utils";
 
 // ur not null shut up
@@ -45,7 +43,7 @@ const world: World = {
     id: "player",
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
-    health: 10,
+    health: 100,
     maxHealth: 150,
     walkSpeed: 3,
     movement: MOVEMENT.IDLE,
@@ -178,11 +176,25 @@ function updateEntities(world: World, dt: number) {
 
   world.powerUps.forEach((powerUp, i) => {
     if (boundaryChecker(world.player, powerUp)) {
-      world.powerUps = world.powerUps.filter((_, ii) => i !== ii);
-      for (const prop of ["walkSpeed", "health"] as const) {
+      world.powerUps = world.powerUps.filter((_, ii) => i !== ii)
+    
+      Object.keys(config[powerUp.type]?.playerChanges || {}).forEach((prop: string) => {
+        if (prop === 'health') {
+          let health = (config[powerUp.type].playerChanges?.[prop] || 0) + world.player[prop]
+
+          if (health > 100) {
+            health = 100
+          }
+
+          world.player[prop] = health
+          return
+        }
+
+        // @ts-ignore
         world.player[prop] +=
-          config[powerUp.type].playerChanges?.[prop] ?? world.player[prop];
-      }
+          // @ts-ignore
+          config[powerUp.type].playerChanges?.[prop] ?? world.player[prop]
+      })
     }
   });
 }

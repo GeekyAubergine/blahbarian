@@ -90,6 +90,32 @@ export const WARDROBE_SPRITE_SHEET: SpriteSheet = {
   height: 256,
 };
 
+export const MEATBALL_SPRITE_SHEET: SpriteSheet = {
+  id: "health",
+  image: document.getElementById("health-sprites"),
+  spriteSize: 128,
+  sprites: {
+    full: {
+      id: "full",
+      sx: 0,
+      sy: 0,
+    },
+    half: {
+      id: "half",
+      sx: 1,
+      sy: 0,
+    },
+    empty: {
+      id: "empty",
+      sx: 0,
+      sy: 1,
+    },
+  },
+  width: 256,
+  height: 256,
+};
+
+
 // console.log({ sharkSprites });
 
 // let image = new Image();
@@ -99,6 +125,7 @@ export const WARDROBE_SPRITE_SHEET: SpriteSheet = {
 
 export const SPRITE_SHEETS: Record<string, SpriteSheet> = {
   [PLAYER_SPRITE_SHEET.id]: PLAYER_SPRITE_SHEET,
+  [MEATBALL_SPRITE_SHEET.id]: MEATBALL_SPRITE_SHEET,
   [WARDROBE_SPRITE_SHEET.id]: WARDROBE_SPRITE_SHEET,
 };
 
