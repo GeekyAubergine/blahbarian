@@ -1,8 +1,8 @@
 import { Entity, MOVEMENT, Vector, World } from "./types";
 
 const ZERO_SPEED_THRESHOLD = 0.05;
-const MIN_SPAWN_DISTANCE = 6;
-const MAX_SPAWN_DISTANCE = 6;
+const MIN_SPAWN_DISTANCE = 18;
+const MAX_SPAWN_DISTANCE = 24;
 
 export function spawnPointForEnemy(
   world: World,
@@ -23,6 +23,9 @@ export function spawnPointForEnemy(
   };
 }
 
+/**
+  * @returns Vector to be added to the current position
+**/
 export function moveTowardsPlayer(
   world: World,
   dt: number,
