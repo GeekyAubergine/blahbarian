@@ -176,23 +176,19 @@ export function renderWorld(
 
   ctx.resetTransform();
 
-  setInterval(() => {
-    renderRandomPowerup(ctx, world);
-  }, 1000);
+  renderRandomPowerup(world);
 }
 
-export function renderRandomPowerup(ctx: CanvasRenderingContext2D, world: World): void {
+export function renderRandomPowerup(world: World): void {
   // 1 in 5 chance of spawning
-  if (Math.random() < 0.8) {
+  if (Math.random() < 0.99) {
     return
   }
 
   const powerups: PowerUpType[] = Object.keys(config) as PowerUpType[];
 
-  const powerup: PowerUp = {
+  world.powerUps.push({
     type: sample(powerups) as PowerUpType,
-    position: spawnPointForEnemy(world),
-  }
-
-  renderPowerUp(ctx, powerup);
+    position: spawnPointForEnemy(world, 1, 1),
+  })
 }
