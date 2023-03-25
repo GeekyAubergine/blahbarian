@@ -46,7 +46,7 @@ function update() {
 
   if (userInputFlags.down) {
     world.player.position.y += 0.1;
-    world.player.direction = Direction.UP;
+    world.player.direction = Direction.DOWN;
   }
 
   if (userInputFlags.left) {
