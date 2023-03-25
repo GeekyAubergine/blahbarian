@@ -200,6 +200,8 @@ function update() {
 
   renderWorld(canvas, ctx, tick, world);
 
+  updateEntities(world, dt);
+
   window.requestAnimationFrame(update);
 
   lastUpdate = Date.now();
