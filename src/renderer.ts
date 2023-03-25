@@ -3,6 +3,10 @@ import { Enemy, EnemyType, Entity, PowerUp, TileType, World } from "./types";
 
 const TILE_SIZE = 64;
 
+export function boundaryChecker(entity: Entity, entity2: Entity) {
+  return Math.hypot(entity.position.x - entity2.position.x, entity.position.y - entity2.position.y) <= TILE_SIZE
+}
+
 export function renderEnemy(ctx: CanvasRenderingContext2D, enemy: Enemy) {
   switch (enemy.type) {
     case EnemyType.CHAIR:
@@ -90,6 +94,10 @@ export function renderWorld(
   })
 
   renderPlayer(ctx, world.player);
+
+  world.enemies.forEach((enemy) => {
+    console.log(boundaryChecker(world.player, enemy))
+  })
 
   ctx.resetTransform();
 }
