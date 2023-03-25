@@ -40,10 +40,12 @@ function update() {
 
   if (userInputFlags.left) {
     world.player.position.x -= 0.1;
+    world.player.direction = Direction.LEFT
   }
 
   if (userInputFlags.right) {
     world.player.position.x += 0.1;
+    world.player.direction = Direction.RIGHT
   }
 }
 
