@@ -1,2 +1,4 @@
 # blahbarian
-honestly i dont know whats happening either \ngood luck
+honestly i dont know whats happening either 
+
+good luck
