@@ -7,6 +7,8 @@ import { movementForVector, moveTowardsPlayer } from "./utils";
 
 const INVINICIBILITY_TIME = 500;
 
+let gameOver: boolean = false
+
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
 const ctx = canvas.getContext("2d")!;
@@ -147,6 +149,7 @@ function playerControl(world: World, dt: number) {
     world.player.movement = MOVEMENT.IDLE;
   }
 
+<<<<<<< Updated upstream
   if (userInputFlags.attack) {
     world.enemies.forEach((enemy) => {
       const { player } = world
@@ -181,6 +184,10 @@ function playerControl(world: World, dt: number) {
   }
 
   if (world.player.health < 0) {
+=======
+  if (world.player.health < 0 && !gameOver) {
+    gameOver = true
+>>>>>>> Stashed changes
     window.alert('Game over! Play again?');
     window.location.reload();
   }
