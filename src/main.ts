@@ -90,6 +90,7 @@ const userInputFlags = {
 
 let lastUpdate: number | null = null;
 let tick = 0;
+let startTime = Date.now();
 
 export function boundaryChecker(
   entity: { position: Vector },
@@ -167,7 +168,7 @@ function updateEntities(world: World, dt: number) {
       enemy.position.y += newPosition.y;
       enemy.movement = movementForVector(newPosition);
     }
-    
+
     if (boundaryChecker(world.player, enemy)) {
       world.player.health -= 10;
       lastTimeDamageTaken = Date.now();
@@ -208,7 +209,7 @@ function update() {
 
   updateEntities(world, dt);
 
-  spawnEntities(world, dt);
+  spawnEntities(world, dt, startTime);
 
   window.requestAnimationFrame(update);
 
