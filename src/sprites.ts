@@ -1,5 +1,4 @@
 import { SpriteSheet } from "./types";
-// import sharkSprites from "./assets/shark-sprites.png";
 
 export const PLAYER_SPRITE_SHEET: SpriteSheet = {
   id: "player",
@@ -46,15 +45,45 @@ export const PLAYER_SPRITE_SHEET: SpriteSheet = {
       sx: 1,
       sy: 3,
     },
-    'player-idle-1': {
-        id: 'player-idle-1',
-        sx: 0,
-        sy: 4,
+    "player-idle-1": {
+      id: "player-idle-1",
+      sx: 0,
+      sy: 4,
     },
-    'player-idle-2': {
-        id: 'player-idle-2',
-        sx: 1,
-        sy: 4,
+    "player-idle-2": {
+      id: "player-idle-2",
+      sx: 1,
+      sy: 4,
+    },
+  },
+  width: 128,
+  height: 256,
+};
+
+export const WARDROBE_SPRITE_SHEET: SpriteSheet = {
+  id: "wardrobe",
+  image: document.getElementById("wardrobe"),
+  spriteSize: 16,
+  sprites: {
+    "wardrobe-1": {
+      id: "wardrobe-1",
+      sx: 0,
+      sy: 0,
+    },
+    "wardrobe-2": {
+      id: "wardrobe-2",
+      sx: 1,
+      sy: 0,
+    },
+    "wardrobe-3": {
+      id: "wardrobe-3",
+      sx: 0,
+      sy: 1,
+    },
+    "wardrobe-4": {
+      id: "wardrobe-4",
+      sx: 1,
+      sy: 1,
     },
   },
   width: 128,
@@ -97,6 +126,7 @@ export const MEATBALL_SPRITE_SHEET: SpriteSheet = {
 export const SPRITE_SHEETS: Record<string, SpriteSheet> = {
   [PLAYER_SPRITE_SHEET.id]: PLAYER_SPRITE_SHEET,
   [MEATBALL_SPRITE_SHEET.id]: MEATBALL_SPRITE_SHEET,
+  [WARDROBE_SPRITE_SHEET.id]: WARDROBE_SPRITE_SHEET,
 };
 
 // for (const spriteSheet of Object.values(SPRITE_SHEETS)) {

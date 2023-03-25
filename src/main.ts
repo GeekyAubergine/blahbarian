@@ -1,3 +1,4 @@
+import { spawnEntities } from "./enemies";
 import { renderWorld } from "./renderer";
 import "./sprites";
 import "./style.css";
@@ -7,9 +8,13 @@ import {
   PowerUpConfig,
   PowerUpType,
   World,
-  Entity,
   Vector,
 } from "./types";
+import {
+  movementForVector,
+  moveTowardsPlayer,
+  spawnPointForEnemy,
+} from "./utils";
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
@@ -23,7 +28,7 @@ export const config: Record<PowerUpType, PowerUpConfig> = {
     color: "orange",
     playerChanges: {
       walkSpeed: 2,
-    }
+    },
   },
 };
 
@@ -35,22 +40,13 @@ const world: World = {
       position: { x: 2, y: 2 },
     },
   ],
-  enemies: [
-    {
-      id: "2",
-      type: EnemyType.CHAIR,
-      position: { x: 0, y: -5 },
-      velocity: { x: 0, y: 0 },
-      health: 100,
-      movement: MOVEMENT.DOWN,
-      walkSpeed: 2,
-    },
-  ],
+  enemies: [],
   player: {
     id: "player",
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
-    health: 100,
+    health: 10,
+    maxHealth: 150,
     walkSpeed: 3,
     movement: MOVEMENT.IDLE,
     animation: {
@@ -101,53 +97,20 @@ export function boundaryChecker(
   entity: { position: Vector },
   entity2: { position: Vector }
 ) {
-  return Math.hypot(entity.position.x - entity2.position.x,
-    entity.position.y - entity2.position.y) <= 1
+  return (
+    Math.hypot(
+      entity.position.x - entity2.position.x,
+      entity.position.y - entity2.position.y
+    ) <= 1
+  );
 }
 
-function update() {
-  let dt = lastUpdate ? (Date.now() - lastUpdate) / 1000 : 0;
+let lastTimeDamageTaken = Date.now();
+const HEALTH_INCREMENT = 0.1;
+const REGEN_START_TIME = 5000;
 
-  renderWorld(canvas, ctx, tick, world);
-
-  window.requestAnimationFrame(update);
-
+function playerControl(world: World, dt: number) {
   let moving = false;
-
-  world.enemies.forEach((enemy) => {
-    if (boundaryChecker(world.player, enemy)) {
-      world.player.health -= 10
-    }
-  })
-
-  if (world.player.health < 0) {
-    throw Error("Oh no")
-  }
-
-  world.powerUps.forEach((powerUp, i) => {
-    if (boundaryChecker(world.player, powerUp)) {
-      world.powerUps = world.powerUps.filter((_, ii) => i !== ii)
-    
-      Object.keys(config[powerUp.type]?.playerChanges || {}).forEach((prop: string) => {
-        if (prop === 'health') {
-          let health = (config[powerUp.type].playerChanges?.[prop] || 0) + world.player[prop]
-
-          if (health > 100) {
-            health = 100
-          }
-
-          world.player[prop] = health
-          return
-        }
-
-        // @ts-ignore
-        world.player[prop] +=
-          // @ts-ignore
-          config[powerUp.type].playerChanges?.[prop] ?? world.player[prop]
-      })
-    }
-  })
-
 
   if (userInputFlags.up) {
     world.player.position.y -= world.player.walkSpeed * dt;
@@ -176,6 +139,80 @@ function update() {
   if (!moving) {
     world.player.movement = MOVEMENT.IDLE;
   }
+
+  if (world.player.health < 0) {
+    throw Error("Oh no");
+  }
+
+  if (
+    Date.now() - lastTimeDamageTaken > REGEN_START_TIME &&
+    world.player.health < world.player.maxHealth
+  ) {
+    if (world.player.health + HEALTH_INCREMENT > world.player.maxHealth) {
+      world.player.health = world.player.maxHealth;
+    } else {
+      world.player.health += HEALTH_INCREMENT;
+    }
+  }
+}
+
+function updateEntities(world: World, dt: number) {
+  world.enemies.forEach((enemy) => {
+    const velocity = moveTowardsPlayer(world, dt, enemy);
+    enemy.movement = movementForVector(velocity);
+  });
+
+  world.enemies.forEach((enemy) => {
+    if (dt % 60) {
+      const newPosition = moveTowardsPlayer(world, dt, enemy);
+      enemy.position.x += newPosition.x;
+      enemy.position.y += newPosition.y;
+      enemy.movement = movementForVector(newPosition);
+    }
+    
+    if (boundaryChecker(world.player, enemy)) {
+      world.player.health -= 10;
+      lastTimeDamageTaken = Date.now();
+    }
+  });
+
+  world.powerUps.forEach((powerUp, i) => {
+    if (boundaryChecker(world.player, powerUp)) {
+      world.powerUps = world.powerUps.filter((_, ii) => i !== ii)
+    
+      Object.keys(config[powerUp.type]?.playerChanges || {}).forEach((prop: string) => {
+        if (prop === 'health') {
+          let health = (config[powerUp.type].playerChanges?.[prop] || 0) + world.player[prop]
+
+          if (health > 100) {
+            health = 100
+          }
+
+          world.player[prop] = health
+          return
+        }
+
+        // @ts-ignore
+        world.player[prop] +=
+          // @ts-ignore
+          config[powerUp.type].playerChanges?.[prop] ?? world.player[prop]
+      })
+    }
+  });
+}
+
+function update() {
+  let dt = lastUpdate ? (Date.now() - lastUpdate) / 1000 : 0;
+
+  playerControl(world, dt);
+
+  renderWorld(canvas, ctx, tick, world);
+
+  updateEntities(world, dt);
+
+  spawnEntities(world, dt);
+
+  window.requestAnimationFrame(update);
 
   lastUpdate = Date.now();
 
