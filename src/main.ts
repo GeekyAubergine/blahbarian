@@ -154,7 +154,6 @@ function playerControl(world: World, dt: number) {
     throw Error("Oh no");
   }
 
-
   if (
     Date.now() - lastTimeDamageTaken > REGEN_START_TIME &&
     world.player.health < world.player.maxHealth
