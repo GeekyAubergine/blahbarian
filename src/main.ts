@@ -20,6 +20,7 @@ const world: World = {
 
 export const userInputFlags = {
   down: false,
+  up: false,
 }
 
 function update() {
@@ -34,10 +35,13 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') {
     userInputFlags.down = true;
   }
+  if (e.key === 'ArrowUp') {
+    userInputFlags.up = true;
+  }
 });
 
 window.addEventListener('keyup', (e) => {
-  if (e.key === 'ArrowDown') {
-    userInputFlags.down = false;
+  if (e.key === 'ArrowUp') {
+    userInputFlags.up = false;
   }
 });
