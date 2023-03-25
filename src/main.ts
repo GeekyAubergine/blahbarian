@@ -56,7 +56,6 @@ window.requestAnimationFrame(update);
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') {
     userInputFlags.down = true;
-
   } else if (e.key === 'ArrowUp') {
     userInputFlags.up = true;
   } else if (e.key === 'ArrowLeft') {
