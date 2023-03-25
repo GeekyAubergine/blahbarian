@@ -4,7 +4,6 @@ import "./sprites";
 import "./style.css";
 import {
   MOVEMENT,
-  EnemyType,
   PowerUpConfig,
   PowerUpType,
   World,
@@ -13,7 +12,6 @@ import {
 import {
   movementForVector,
   moveTowardsPlayer,
-  spawnPointForEnemy,
 } from "./utils";
 
 // ur not null shut up
@@ -45,7 +43,7 @@ const world: World = {
     id: "player",
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
-    health: 10,
+    health: 100,
     maxHealth: 150,
     walkSpeed: 3,
     movement: MOVEMENT.IDLE,
