@@ -11,12 +11,12 @@ import {
   Player,
 } from "./types";
 import { config } from "./main";
-import { sample } from 'lodash'
+import { sample } from "lodash";
 import { spawnPointForEnemy } from "./utils";
 
 export const TILE_SIZE = 64;
-const HEALTH_HEART_UNIT_AMOUNT = 20
-const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT
+const HEALTH_HEART_UNIT_AMOUNT = 20;
+const TOTAL_AVAILABLE_HEARTS = 100 / HEALTH_HEART_UNIT_AMOUNT;
 
 export function boundaryChecker(entity: Entity, entity2: Entity) {
   return (
@@ -128,10 +128,10 @@ export function renderTile(
   switch (tile) {
     case TileType.FLOOR:
       ctx.fillStyle = "#C5CACE";
-      break
+      break;
     case TileType.WALL:
       ctx.fillStyle = "black";
-      break
+      break;
     default:
       break;
   }
@@ -197,7 +197,7 @@ export function renderWorld(
 export function renderRandomPowerup(world: World): void {
   // 1 in 5 chance of spawning
   if (Math.random() < 0.99) {
-    return
+    return;
   }
 
   const powerups: PowerUpType[] = Object.keys(config) as PowerUpType[];
@@ -205,7 +205,7 @@ export function renderRandomPowerup(world: World): void {
   world.powerUps.push({
     type: sample(powerups) as PowerUpType,
     position: spawnPointForEnemy(world, 1, 1),
-  })
+  });
 }
 
 type HeartType = "full" | "half" | "empty";

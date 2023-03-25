@@ -12,7 +12,7 @@ export const BASE_WARDROBE: Enemy = {
   health: 100,
   maxHealth: 100,
   movement: MOVEMENT.IDLE,
-  walkSpeed: 2,
+  walkSpeed: 0,
   spriteSheetName: "wardrobe",
   animation: {
     [MOVEMENT.IDLE]: {

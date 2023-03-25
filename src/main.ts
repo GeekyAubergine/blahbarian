@@ -7,7 +7,7 @@ import { movementForVector, moveTowardsPlayer } from "./utils";
 
 const INVINICIBILITY_TIME = 500;
 
-let gameOver: boolean = false
+let gameOver: boolean = false;
 
 // ur not null shut up
 const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
@@ -151,40 +151,38 @@ function playerControl(world: World, dt: number) {
 
   if (userInputFlags.attack) {
     world.enemies.forEach((enemy) => {
-      const { player } = world
-      const newPosition = { ...player.position }
+      const { player } = world;
+      const newPosition = { ...player.position };
       switch (player.movement) {
         case MOVEMENT.UP: {
-          newPosition.y -= TILE_SIZE
-          break
+          newPosition.y -= TILE_SIZE / 2;
+          break;
         }
         case MOVEMENT.DOWN: {
-          newPosition.y += TILE_SIZE
-          break
+          newPosition.y += TILE_SIZE / 2;
+          break;
         }
         case MOVEMENT.RIGHT: {
-          newPosition.x += TILE_SIZE
-          break
+          newPosition.x += TILE_SIZE / 2;
+          break;
         }
         case MOVEMENT.LEFT: {
-          newPosition.y += TILE_SIZE
-          break
+          newPosition.y += TILE_SIZE / 2;
+          break;
         }
       }
-      console.log(newPosition)
-      if (boundaryChecker({position: newPosition}, enemy)) {
+      if (boundaryChecker({ position: newPosition }, enemy)) {
         enemy.health -= 1000;
-        console.log(enemy)
         if (enemy.health <= 0) {
-          world.enemies.filter((e) => e.id !== enemy.id)
+          world.enemies = world.enemies.filter((e) => e.id !== enemy.id);
         }
       }
-    })
+    });
   }
 
   if (world.player.health < 0 && !gameOver) {
-    gameOver = true
-    window.alert('Game over! Play again?');
+    gameOver = true;
+    window.alert("Game over! Play again?");
     window.location.reload();
   }
 
@@ -284,8 +282,8 @@ window.addEventListener("keydown", (e) => {
     userInputFlags.left = true;
   } else if (e.code === "ArrowRight" || e.code === "KeyD") {
     userInputFlags.right = true;
-  } else if (e.code === 'Space') {
-    userInputFlags.attack = true
+  } else if (e.code === "Space") {
+    userInputFlags.attack = true;
   }
 });
 
@@ -298,7 +296,7 @@ window.addEventListener("keyup", (e) => {
     userInputFlags.left = false;
   } else if (e.code === "ArrowRight" || e.code === "KeyD") {
     userInputFlags.right = false;
-  } else if (e.code === 'Space') {
-    userInputFlags.attack = false
+  } else if (e.code === "Space") {
+    userInputFlags.attack = false;
   }
 });
