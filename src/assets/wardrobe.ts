@@ -34,7 +34,7 @@ export const WARDROBE_SPRITE_SHEET_AND_ANIMATIONS: SpriteSheetAndAnimationsDefin
     animations: {
       "wardrobe-walk": {
         frames: ["walk1", "walk2"],
-        duration: 1,
+        duration: 0.5,
         loop: true,
       },
       "wardrobe-bite": {
