@@ -9,6 +9,12 @@ export class Vector {
     this.y = y;
   }
 
+  static ZERO = new Vector(0, 0);
+
+  static Lerp(a: Vector, b: Vector, t: number): Vector {
+    return new Vector(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+  }
+
   add(other: Vector): Vector {
     return new Vector(this.x + other.x, this.y + other.y);
   }
@@ -40,8 +46,6 @@ export class Vector {
     }
     return this.div(mag);
   }
-
-  
 
   toString(): string {
     return `Vector(${this.x}, ${this.y})`;

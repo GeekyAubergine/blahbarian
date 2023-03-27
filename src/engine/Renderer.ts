@@ -120,10 +120,10 @@ export class Renderer {
 
     ctx.scale(camera.scale, camera.scale);
 
-    // ctx.translate(
-    //   Math.floor(-camera.position.x),
-    //   Math.floor(-camera.position.y)
-    // );
+    ctx.translate(
+      Math.floor(-camera.position.x),
+      Math.floor(-camera.position.y)
+    );
 
     for (const entity of world.getEntities()) {
       entity.render(this, now);

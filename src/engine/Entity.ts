@@ -25,6 +25,7 @@ export type EntityConfig = {
 };
 
 export const ENTITY_NAMES = {
+  TEST: "test",
   PLAYER: "shark",
   WARDROBE: "wardrobe",
 };
@@ -110,5 +111,9 @@ export class Entity {
 
   getPosition() {
     return this.position;
+  }
+
+  getWalkingSpeed() {
+    return this.attribtes.walkingSpeed;
   }
 }

@@ -95,6 +95,6 @@ export const SHARK_ENTITY_CONFIG: EntityConfig = {
     [Movement.UP_LEFT]: "shark-up",
   },
   attributes: {
-    walkingSpeed: 128,
+    walkingSpeed: 256,
   },
 };

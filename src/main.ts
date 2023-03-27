@@ -7,8 +7,13 @@ import { EnemyWardrobe } from "./engine/enemies/EnemyWardrobe";
 import { Vector } from "./engine/Vector";
 import { TILE_SIZE } from "./engine/Constants";
 import { ENTITY_NAMES } from "./engine/Entity";
+import { TEST_ENITY_CONFIG } from "./assets/test";
 
-const ENTITIES = [SHARK_ENTITY_CONFIG, WARDROBE_ENITY_CONFIG];
+const ENTITIES = [
+  TEST_ENITY_CONFIG,
+  SHARK_ENTITY_CONFIG,
+  WARDROBE_ENITY_CONFIG,
+];
 
 const canvas = document.querySelector<HTMLCanvasElement>("#canvas");
 let game: Game | null = null;
@@ -30,6 +35,18 @@ async function initialize(): Promise<void> {
   const g = new Game(canvas, ENTITIES);
 
   await g.loadAssets();
+
+  g.getWorld().addEntity(
+    g,
+    new EnemyWardrobe(
+      "test",
+      new Vector(0, -2 * TILE_SIZE),
+      0,
+      new Vector(0, 0),
+      0,
+      g.getEntityDefaultAttributes(ENTITY_NAMES.WARDROBE)
+    )
+  );
 
   g.getWorld().addEntity(
     g,

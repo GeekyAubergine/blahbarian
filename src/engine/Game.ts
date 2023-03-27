@@ -1,13 +1,16 @@
 import { Camera } from "./Camera";
 import { EntityAttributes, EntityConfig, ENTITY_NAMES } from "./Entity";
 import { Event } from "./Events";
+import { Keyboard } from "./Keyboard";
 import { Renderer } from "./Renderer";
 import { Vector } from "./Vector";
 import { World } from "./World";
 
 export class Game {
-  readonly renderer: Renderer;
+  private renderer: Renderer;
   private world: World;
+  private keyboard: Keyboard;
+
   private lastTick: number = 0;
   private now: number = 0;
   private camera: Camera = new Camera(new Vector(0, 0), 0.5);
@@ -16,6 +19,7 @@ export class Game {
 
   constructor(canvas: HTMLCanvasElement, entityConfits: EntityConfig[]) {
     this.renderer = new Renderer(canvas);
+    this.keyboard = new Keyboard();
 
     for (const config of entityConfits) {
       this.parseEntityConfig(config);
@@ -42,6 +46,8 @@ export class Game {
   }
 
   update() {
+    this.keyboard.update();
+
     if (this.lastTick === 0) {
       this.lastTick = Date.now() / 1000;
     }
@@ -51,10 +57,11 @@ export class Game {
     const dt = this.now - this.lastTick;
 
     this.world.update(this, dt, this.events);
-    this.camera.update(this, this.world, dt);
+    this.camera.update(this, dt)
     this.events = [];
 
     this.lastTick = this.now;
+
   }
 
   render() {
@@ -79,5 +86,9 @@ export class Game {
 
   getEntityDefaultAttributes(name: ENTITY_NAMES): EntityAttributes {
     return this.entityDefaultAttributes[name];
+  }
+
+  getKeyboard() {
+    return this.keyboard;
   }
 }
