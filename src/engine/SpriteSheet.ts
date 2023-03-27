@@ -1,6 +1,4 @@
-import { AnimationDefinition } from "./Animation";
-
-type SpriteDefinition = {
+type SpriteConfig = {
   sx: number;
   sy: number;
 };
@@ -16,13 +14,13 @@ export class Sprite {
     this.sy = sy;
   }
 
-  static fromDefinition(id: string, definition: SpriteDefinition): Sprite {
+  static fromConfig(id: string, definition: SpriteConfig): Sprite {
     return new Sprite(id, definition.sx, definition.sy);
   }
 }
 
-export type SpriteSheetDefinition = {
-  sprites: Record<string, SpriteDefinition>;
+export type SpriteSheetConfig = {
+  sprites: Record<string, SpriteConfig>;
   assetFileName: string;
   rotationPoint: {
     x: number;
@@ -80,10 +78,10 @@ export class SpriteSheet {
     });
   }
 
-  static fromDefinition(definition: SpriteSheetDefinition): SpriteSheet {
+  static fromConfig(definition: SpriteSheetConfig): SpriteSheet {
     const sprites: Record<string, Sprite> = {};
     for (const [id, spriteDefinition] of Object.entries(definition.sprites)) {
-      sprites[id] = Sprite.fromDefinition(id, spriteDefinition);
+      sprites[id] = Sprite.fromConfig(id, spriteDefinition);
     }
     return new SpriteSheet(
       sprites,

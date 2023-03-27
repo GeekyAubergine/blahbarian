@@ -1,4 +1,4 @@
-import { Animation } from "../Animation";
+import { Animation, AnimationTemplate } from "../Animation";
 import { TILE_SIZE } from "../Constants";
 import { Event } from "../Events";
 import { Game } from "../Game";
@@ -7,34 +7,49 @@ import { World } from "../World";
 import { Enemy } from "./Enemy";
 
 export class EnemyWardrobe extends Enemy {
-  animation: Animation | null = null;
-  walkAnimation: Animation | null = null;
-  bitingAnimation: Animation | null = null;
+  walkAnimation: AnimationTemplate | null = null;
+  bitingAnimation: AnimationTemplate | null = null;
 
-  init(game: Game, world: World, renderer: Renderer, now: number) {
-    super.init(game, world, renderer, now);
+  biting: boolean = false;
 
-    this.walkAnimation = renderer.findAnimation("wardrobe-walk", now);
-    this.bitingAnimation = renderer.findAnimation("wardrobe-bite", now);
+  init(game: Game) {
+    super.init(game);
 
-    this.animation = this.walkAnimation;
+    this.walkAnimation = game
+      .getRenderer()
+      .findAnimationTemplate("wardrobe-walk");
+    this.bitingAnimation = game
+      .getRenderer()
+      .findAnimationTemplate("wardrobe-bite");
   }
 
-  update(game: Game, world: World, dt: number, events: Event[]) {
-    super.update(game, world, dt, events);
+  update(game: Game, dt: number, events: Event[]) {
+    super.update(game, dt, events);
 
-    const distanceToPlayer = this.position.distance(world.player.position);
+    const distanceToPlayer = this.position.distance(
+      game.getWorld().getPlayer().getPosition()
+    );
 
     if (distanceToPlayer < TILE_SIZE * 0.75) {
-      this.animation = this.bitingAnimation;
+      if (!this.biting) {
+        this.activeAnimation = game
+          .getRenderer()
+          .makeAnimation(game, this.bitingAnimation);
+        this.biting = true;
+      }
     } else {
-      this.animation = this.walkAnimation;
+      if (this.biting) {
+        this.activeAnimation = game
+          .getRenderer()
+          .makeAnimation(game, this.walkAnimation);
+        this.biting = false;
+      }
     }
-  }
 
-  render(renderer: Renderer, now: number): void {
-    if (this.animation) {
-      this.animation.render(renderer, now, this.position, this.rotation);
+    if (this.activeAnimation == null) {
+      this.activeAnimation = game
+        .getRenderer()
+        .makeAnimation(game, this.walkAnimation);
     }
   }
 }

@@ -1,4 +1,4 @@
-const NEAR_ZERO = 0.0000001;
+export const NEAR_ZERO = 0.0000001;
 
 export class Vector {
   readonly x: number;
@@ -40,6 +40,8 @@ export class Vector {
     }
     return this.div(mag);
   }
+
+  
 
   toString(): string {
     return `Vector(${this.x}, ${this.y})`;

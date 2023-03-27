@@ -1,60 +1,108 @@
 import {
   Animation,
-  AnimationDefinition,
+  AnimationConfig,
   AnimationTemplate,
   SpriteSheetAndAnimations,
 } from "./Animation";
 import { TILE_SIZE } from "./Constants";
+import { EntityConfig } from "./Entity";
 import { Game } from "./Game";
+import {
+  movementToAnimationFromConfig,
+  MovementToAnimationTemplateMap,
+} from "./Movement";
 import { SpriteSheet } from "./SpriteSheet";
 import { Vector } from "./Vector";
 import { World } from "./World";
 
 export class Renderer {
-  readonly canvas: HTMLCanvasElement;
-  readonly ctx: CanvasRenderingContext2D;
-  readonly spriteSheets: Record<string, SpriteSheet> = {};
-  animations: Record<string, AnimationTemplate> = {};
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
+  private spriteSheets: Record<string, SpriteSheet> = {};
+  private animations: Record<string, AnimationTemplate> = {};
+  private entityNameToMovmentAnimationMapMap: Record<
+    string,
+    MovementToAnimationTemplateMap
+  > = {};
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d")!;
   }
 
-  addSpriteSheetAndAnimations(
-    id: string,
-    SpriteSheetAndAnimations: SpriteSheetAndAnimations
-  ) {
-    const { spriteSheet, animations } = SpriteSheetAndAnimations;
+  parseEntityConfig(entityConfig: EntityConfig) {
+    const { name, spriteSheet, animations, movementAnimationsConfig } =
+      entityConfig;
 
-    this.spriteSheets[id] = spriteSheet;
-    this.animations = { ...this.animations, ...animations };
+    this.spriteSheets = {
+      ...this.spriteSheets,
+      [name]: SpriteSheet.fromConfig(spriteSheet),
+    };
+
+    this.animations = Object.entries(animations).reduce<
+      Record<string, AnimationTemplate>
+    >((acc, [id, animationConfig]) => {
+      return {
+        ...acc,
+        [id]: { ...animationConfig, spriteSheetId: name },
+      };
+    }, this.animations);
+
+    if (movementAnimationsConfig) {
+      this.entityNameToMovmentAnimationMapMap = {
+        ...this.entityNameToMovmentAnimationMapMap,
+        [name]: movementToAnimationFromConfig(this, movementAnimationsConfig),
+      };
+    }
   }
 
-  async loadSpriteSheets() {
+  async loadAssets() {
     const promises = Object.values(this.spriteSheets).map((spriteSheet) =>
       spriteSheet.load()
     );
 
     await Promise.all(promises);
+
+    console.log(this);
   }
 
-  findAnimation(id: string, now: number): Animation | null {
-    const template = this.animations[id] ?? null;
+  findAnimationTemplate(id: string): AnimationTemplate | null {
+    return this.animations[id] ?? null;
+  }
 
-    console.log({ template });
+  findMovementAnimationTemplateMap(
+    entityName: string
+  ): MovementToAnimationTemplateMap | null {
+    return this.entityNameToMovmentAnimationMapMap[entityName] ?? null;
+  }
 
+  makeAnimation(
+    game: Game,
+    template: AnimationTemplate | null
+  ): Animation | null {
     if (!template) {
-      throw new Error(`Animation ${id} not found`);
+      return null;
     }
-
-    return Animation.fromTemplate(template, now);
+    return Animation.fromTemplate(template, game.getNow());
   }
+
+  // findAnimation(id: string, now: number): Animation | null {
+  //   const template = this.animations[id] ?? null;
+
+  //   console.log({ template });
+
+  //   if (!template) {
+  //     console.error(`Animation ${id} not found`);
+  //     return null;
+  //   }
+
+  //   return Animation.fromTemplate(template, now);
+  // }
 
   renderWorld(game: Game, world: World, now: number) {
     const { ctx } = this;
     const { width, height } = this.canvas;
-    const { camera } = game;
+    const camera = game.getCamera();
 
     ctx.webkitImageSmoothingEnabled = false;
     ctx.mozImageSmoothingEnabled = false;
@@ -77,11 +125,11 @@ export class Renderer {
     //   Math.floor(-camera.position.y)
     // );
 
-    for (const entity of world.entities) {
+    for (const entity of world.getEntities()) {
       entity.render(this, now);
     }
 
-    world.player.render(this, now);
+    world.getPlayer().render(this, now);
 
     ctx.restore();
   }
@@ -120,10 +168,7 @@ export class Renderer {
 
     ctx.save();
     // ctx.scale(scaleX, scaleY);
-    ctx.translate(
-      Math.floor(position.x),
-      Math.floor(position.y)
-    );
+    ctx.translate(Math.floor(position.x), Math.floor(position.y));
     ctx.rotate(rotationInRadians);
     // ctx.fillStyle = "red";
     // ctx.fillRect(

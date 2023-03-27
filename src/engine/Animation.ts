@@ -1,8 +1,8 @@
 import { Renderer } from "./Renderer";
-import { SpriteSheet, SpriteSheetDefinition } from "./SpriteSheet";
+import { SpriteSheet, SpriteSheetConfig } from "./SpriteSheet";
 import { Vector } from "./Vector";
 
-export interface AnimationDefinition {
+export interface AnimationConfig {
   readonly frames: string[];
   readonly duration: number;
   readonly loop: boolean;
@@ -24,7 +24,7 @@ export class Animation {
 
   constructor(
     spriteSheetId: string,
-    definition: AnimationDefinition,
+    definition: AnimationConfig,
     startTime: number,
     loop: boolean
   ) {
@@ -80,9 +80,9 @@ export class Animation {
   }
 }
 
-export type SpriteSheetAndAnimationsDefinition = {
-  spriteSheet: SpriteSheetDefinition;
-  animations: Record<string, AnimationDefinition>;
+export type SpriteSheetAndAnimationsConfig = {
+  spriteSheet: SpriteSheetConfig;
+  animations: Record<string, AnimationConfig>;
 };
 
 export class SpriteSheetAndAnimations {
@@ -97,11 +97,11 @@ export class SpriteSheetAndAnimations {
     this.animations = animations;
   }
 
-  static fromDefinition(
+  static fromConfig(
     spriteSheetId: string,
-    definition: SpriteSheetAndAnimationsDefinition
+    definition: SpriteSheetAndAnimationsConfig
   ): SpriteSheetAndAnimations {
-    const spriteSheet = SpriteSheet.fromDefinition(definition.spriteSheet);
+    const spriteSheet = SpriteSheet.fromConfig(definition.spriteSheet);
     const animations = Object.entries(definition.animations).reduce<
       Record<string, AnimationTemplate>
     >(

@@ -6,12 +6,12 @@ import { Renderer } from "./Renderer";
 import { Vector } from "./Vector";
 
 export class World {
-  player: Player;
-  entities: Entity[] = [];
+  private player: Player;
+  private entities: Entity[] = [];
 
   constructor() {
     this.player = new Player(
-      "player",
+      "shark",
       new Vector(0, 0),
       0,
       new Vector(0, 0),
@@ -19,22 +19,31 @@ export class World {
     );
   }
 
-  init(game: Game, renderer: Renderer, now: number) {
+  init(game: Game) {
     for (const entity of this.entities) {
-      entity.init(game, this, renderer, now);
+      entity.init(game);
     }
-    this.player.init(game, this, renderer, now);
+    this.player.init(game);
   }
 
   update(game: Game, dt: number, events: Event[]) {
-    this.player.update(game, this, dt, events);
+    this.player.update(game, dt, events);
     for (const entity of this.entities) {
-      entity.update(game, this, dt, events);
+      entity.update(game, dt, events);
     }
   }
 
-  addEntity(entity: Entity) {
+  addEntity(game: Game, entity: Entity) {
+    entity.init(game);
     this.entities.push(entity);
     console.log("Added entity", entity);
+  }
+
+  getPlayer() {
+    return this.player;
+  }
+
+  getEntities() {
+    return this.entities;
   }
 }
