@@ -6,6 +6,7 @@ import { WARDROBE_ENITY_CONFIG } from "./assets/wardrobe";
 import { EnemyWardrobe } from "./engine/enemies/EnemyWardrobe";
 import { Vector } from "./engine/Vector";
 import { TILE_SIZE } from "./engine/Constants";
+import { ENTITY_NAMES } from "./engine/Entity";
 
 const ENTITIES = [SHARK_ENTITY_CONFIG, WARDROBE_ENITY_CONFIG];
 
@@ -26,13 +27,7 @@ async function initialize(): Promise<void> {
     throw new Error("No canvas");
   }
 
-  const renderer = new Renderer(canvas);
-
-  const g = new Game(renderer);
-
-  ENTITIES.forEach((entity) => {
-    g.parseEntityConfig(entity);
-  });
+  const g = new Game(canvas, ENTITIES);
 
   await g.loadAssets();
 
@@ -42,8 +37,9 @@ async function initialize(): Promise<void> {
       "wardobe",
       new Vector(4 * TILE_SIZE, 0),
       0,
-      new Vector(0, 0),
-      0
+      new Vector(-100, 0),
+      0,
+      g.getEntityDefaultAttributes(ENTITY_NAMES.WARDROBE)
     )
   );
 

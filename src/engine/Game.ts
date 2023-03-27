@@ -1,5 +1,5 @@
 import { Camera } from "./Camera";
-import { EntityAttributes, EntityConfig } from "./Entity";
+import { EntityAttributes, EntityConfig, ENTITY_NAMES } from "./Entity";
 import { Event } from "./Events";
 import { Renderer } from "./Renderer";
 import { Vector } from "./Vector";
@@ -12,11 +12,16 @@ export class Game {
   private now: number = 0;
   private camera: Camera = new Camera(new Vector(0, 0), 0.5);
   private events: Event[] = [];
-  private entityDefaultAttributes: Record<string, EntityAttributes> = {};
+  private entityDefaultAttributes: Record<ENTITY_NAMES, EntityAttributes> = {};
 
-  constructor(renderer: Renderer) {
-    this.renderer = renderer;
-    this.world = new World();
+  constructor(canvas: HTMLCanvasElement, entityConfits: EntityConfig[]) {
+    this.renderer = new Renderer(canvas);
+
+    for (const config of entityConfits) {
+      this.parseEntityConfig(config);
+    }
+
+    this.world = new World(this);
   }
 
   parseEntityConfig(config: EntityConfig) {
@@ -72,7 +77,7 @@ export class Game {
     return this.camera;
   }
 
-  getEntityDefaultAttributes(name: string): EntityAttributes | null {
-    return this.entityDefaultAttributes[name] ?? null;
+  getEntityDefaultAttributes(name: ENTITY_NAMES): EntityAttributes {
+    return this.entityDefaultAttributes[name];
   }
 }

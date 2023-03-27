@@ -44,6 +44,6 @@ export const WARDROBE_ENITY_CONFIG: EntityConfig = {
     },
   },
   attributes: {
-    walkingSpeed: 12,
+    walkingSpeed: 32,
   }
 };

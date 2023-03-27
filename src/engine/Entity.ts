@@ -26,7 +26,10 @@ export type EntityConfig = {
 
 export const ENTITY_NAMES = {
   PLAYER: "shark",
+  WARDROBE: "wardrobe",
 };
+
+export type ENTITY_NAMES = typeof ENTITY_NAMES[keyof typeof ENTITY_NAMES];
 
 let idCount = 0;
 export class Entity {
@@ -37,18 +40,19 @@ export class Entity {
   protected velocity: Vector;
   protected angularVelocity: number;
   protected movement: Movement = Movement.IDLE;
-  protected walkingSpeed: number = 1;
+  protected attribtes: EntityAttributes;
 
   protected activeAnimation: Animation | null = null;
   protected movementAnimationTemplateMap: MovementToAnimationTemplateMap | null =
     null;
 
   constructor(
-    name: string,
+    name: ENTITY_NAMES,
     position: Vector,
     rotation: number,
     velocity: Vector,
-    angularVelocity: number
+    angularVelocity: number,
+    attributes: EntityAttributes
   ) {
     this.name = name;
     this.id = `${name}-${idCount}`;
@@ -56,6 +60,7 @@ export class Entity {
     this.rotation = rotation;
     this.velocity = velocity;
     this.angularVelocity = angularVelocity;
+    this.attribtes = attributes;
 
     idCount += 1;
   }
@@ -66,12 +71,11 @@ export class Entity {
       .findMovementAnimationTemplateMap(this.name);
   }
 
-  setWalkingSpeed(speed: number) {
-    this.walkingSpeed = speed;
-  }
-
   update(game: Game, dt: number, events: Event[]) {
-    this.position = this.position.add(this.velocity.mul(dt));
+    const walkingVelocity = this.velocity
+      .normalize()
+      .mul(this.attribtes.walkingSpeed);
+    this.position = this.position.add(walkingVelocity.mul(dt));
     this.rotation += this.angularVelocity * dt;
     const previousMovement = this.movement;
     this.movement = movementFromVector(this.velocity);

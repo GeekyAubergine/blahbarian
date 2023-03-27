@@ -1,4 +1,4 @@
-import { Entity } from "./Entity";
+import { Entity, ENTITY_NAMES } from "./Entity";
 import { Event } from "./Events";
 import { Game } from "./Game";
 import { Player } from "./Player";
@@ -9,13 +9,14 @@ export class World {
   private player: Player;
   private entities: Entity[] = [];
 
-  constructor() {
+  constructor(game: Game) {
     this.player = new Player(
-      "shark",
+      ENTITY_NAMES.PLAYER,
       new Vector(0, 0),
       0,
       new Vector(0, 0),
-      0
+      0,
+      game.getEntityDefaultAttributes(ENTITY_NAMES.PLAYER)
     );
   }
 
