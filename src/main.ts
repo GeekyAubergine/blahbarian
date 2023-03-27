@@ -1,356 +1,95 @@
-import { spawnEntities } from "./enemies";
-import { renderWorld, TILE_SIZE } from "./renderer";
-import "./sprites";
 import "./style.css";
-import {
-  MOVEMENT,
-  PowerUpConfig,
-  PowerUpType,
-  World,
-  Vector,
-  EnemyType,
-} from './types';
-import {
-  movementForVector,
-  moveTowardsPlayer,
-  playSound,
-} from './utils';
-import lodash from 'lodash';
+import { SHARK_SPRITE_SHEET_AND_ANIMATIONS } from "./assets/shark";
+import { Renderer } from "./engine/Renderer";
+import { SpriteSheet } from "./engine/SpriteSheet";
+import { SpriteSheetAndAnimations } from "./engine/Animation";
+import { Game } from "./engine/Game";
+import { WARDROBE_SPRITE_SHEET_AND_ANIMATIONS } from "./assets/wardrobe";
+import { EnemyWardrobe } from "./engine/enemies/EnemyWardrobe";
+import { Vector } from "./engine/Vector";
+import { TILE_SIZE } from "./engine/Constants";
 
-const INVINICIBILITY_TIME = 500;
+const canvas = document.querySelector<HTMLCanvasElement>("#canvas");
+let game: Game | null = null;
 
-let gameOver: boolean = false;
-let won = false;
-
-// ur not null shut up
-const canvas: HTMLCanvasElement = document.querySelector("#game-canvas")!;
-const ctx = canvas.getContext("2d")!;
-
-export const config: Record<PowerUpType, PowerUpConfig> = {
-  [PowerUpType.KETCHUP]: {
-    type: PowerUpType.KETCHUP,
-    duration: -1,
-    radius: 8,
-    color: "orange",
-    playerChanges: {
-      walkSpeed: 2,
-    },
-  },
-  [PowerUpType.DRUGS]: {
-    type: PowerUpType.DRUGS,
-    duration: 2,
-    radius: 8,
-    color: "green",
-    playerChanges: {
-      health: 40,
-      walkSpeed: 2,
-    },
-  },
-  [PowerUpType.BROCOLLI_BOMB]: {
-    type: PowerUpType.BROCOLLI_BOMB,
-    duration: 5,
-    radius: 8,
-    color: "yellow",
-    playerChanges: {
-      health: -100,
-    },
-  },
-};
-
-const world: World = {
-  tiles: [],
-  powerUps: [],
-  enemies: [],
-  player: {
-    id: "player",
-    position: { x: 0, y: 0 },
-    velocity: { x: 0, y: 0 },
-    health: 100,
-    maxHealth: 150,
-    walkSpeed: 3,
-    movement: MOVEMENT.IDLE,
-    animation: {
-      [MOVEMENT.IDLE]: {
-        spriteSheetId: "player",
-        spriteIds: [
-          "player-idle-1",
-          "player-idle-1",
-          "player-idle-1",
-          "player-idle-1",
-          "player-idle-2",
-          "player-idle-2",
-          "player-idle-2",
-          "player-idle-2",
-        ],
-      },
-      [MOVEMENT.UP]: {
-        spriteSheetId: "player",
-        spriteIds: ["player-up-1", "player-up-2"],
-      },
-      [MOVEMENT.DOWN]: {
-        spriteSheetId: "player",
-        spriteIds: ["player-down-1", "player-down-2"],
-      },
-      [MOVEMENT.LEFT]: {
-        spriteSheetId: "player",
-        spriteIds: ["player-left-1", "player-left-2"],
-      },
-      [MOVEMENT.RIGHT]: {
-        spriteSheetId: "player",
-        spriteIds: ["player-right-1", "player-right-2"],
-      },
-    },
-    swinging: false,
-  },
-};
-
-const userInputFlags = {
-  down: false,
-  up: false,
-  left: false,
-  right: false,
-  attack: false,
-};
-
-let lastUpdate: number | null = null;
-let tick = 0;
-let startTime = Date.now();
-
-export function boundaryChecker(
-  entity: { position: Vector },
-  entity2: { position: Vector }
-) {
-  return (
-    Math.hypot(
-      entity.position.x - entity2.position.x,
-      entity.position.y - entity2.position.y
-    ) <= 1
-  );
-}
-
-let lastTimeDamageTaken = Date.now();
-const HEALTH_INCREMENT = 0.1;
-const REGEN_START_TIME = 5000;
-
-const damageAudioTimings: Record<EnemyType, number> = {
-  [EnemyType.CHAIR]: 0,
-  [EnemyType.TABLE]: 0,
-  [EnemyType.WARDROBE]: 0,
-};
-
-const DAMAGE_AUDIO = [
-    '/assets/ahhhh.m4a',
-    '/assets/ahhhh2.m4a',
-    '/assets/ahhhh3.m4a',
-    '/assets/ahhhh4.m4a',
-    '/assets/ahhhh5.m4a',
-];
-
-const POWER_UP_AUDIO = [
-    '/assets/blahaj.m4a',
-    '/assets/bonbonbonbon.m4a',
-];
-
-function playerControl(world: World, dt: number) {
-  let moving = false;
-
-  if (userInputFlags.up) {
-    world.player.position.y -= world.player.walkSpeed * dt;
-    world.player.movement = MOVEMENT.UP;
-    moving = true;
-  }
-
-  if (userInputFlags.down) {
-    world.player.position.y += world.player.walkSpeed * dt;
-    world.player.movement = MOVEMENT.DOWN;
-    moving = true;
-  }
-
-  if (userInputFlags.left) {
-    world.player.position.x -= world.player.walkSpeed * dt;
-    world.player.movement = MOVEMENT.LEFT;
-    moving = true;
-  }
-
-  if (userInputFlags.right) {
-    world.player.position.x += world.player.walkSpeed * dt;
-    world.player.movement = MOVEMENT.RIGHT;
-    moving = true;
-  }
-
-  if (!moving) {
-    world.player.movement = MOVEMENT.IDLE;
-  }
-
-  if (userInputFlags.attack) {
-    world.player.swinging = true;
-    world.enemies.forEach((enemy) => {
-      const { player } = world;
-      const newPosition = { ...player.position };
-      switch (player.movement) {
-        case MOVEMENT.UP: {
-          newPosition.y -= TILE_SIZE / 2;
-          break;
-        }
-        case MOVEMENT.DOWN: {
-          newPosition.y += TILE_SIZE / 2;
-          break;
-        }
-        case MOVEMENT.RIGHT: {
-          newPosition.x += TILE_SIZE / 2;
-          break;
-        }
-        case MOVEMENT.LEFT: {
-          newPosition.y += TILE_SIZE / 2;
-          break;
-        }
-      }
-      if (boundaryChecker({ position: newPosition }, enemy)) {
-        enemy.health -= 1000;
-        if (enemy.health <= 0) {
-          world.enemies = world.enemies.filter((e) => e.id !== enemy.id);
-        }
-      }
-    });
-  } else {
-    setTimeout(() => {
-      world.player.swinging = false;
-    }, 1000);
-  }
-
-  if (world.player.health < 0 && !gameOver) {
-    gameOver = true;
-    window.alert("Game over! Play again?");
-    if (!won) {
-      window.location.reload();
-    }
-  }
-
-  if (
-    Date.now() - lastTimeDamageTaken > REGEN_START_TIME &&
-    world.player.health < world.player.maxHealth
-  ) {
-    if (world.player.health + HEALTH_INCREMENT > world.player.maxHealth) {
-      world.player.health = world.player.maxHealth;
-    } else {
-      world.player.health += HEALTH_INCREMENT;
-    }
-  }
-}
-
-function updateEntities(world: World, dt: number) {
-  world.enemies.forEach((enemy) => {
-    const velocity = moveTowardsPlayer(world, dt, enemy);
-    enemy.movement = movementForVector(velocity);
-  });
-
-  world.enemies.forEach((enemy) => {
-    if (dt % 60) {
-      const newPosition = moveTowardsPlayer(world, dt, enemy);
-      enemy.position.x += newPosition.x;
-      enemy.position.y += newPosition.y;
-      enemy.movement = movementForVector(newPosition);
-    }
-
-    if (boundaryChecker(world.player, enemy)) {
-      const timeSinceLastDamage = Date.now() - lastTimeDamageTaken;
-
-      if (timeSinceLastDamage < INVINICIBILITY_TIME) {
-        return;
-      }
-
-      world.player.health -= 10;
-      lastTimeDamageTaken = Date.now();
-
-      if (Date.now() - damageAudioTimings[enemy.type] > 1000) {
-        playSound(DAMAGE_AUDIO[lodash.random(0, DAMAGE_AUDIO.length - 1)]);
-        damageAudioTimings[enemy.type] = Date.now();
-      }
-    }
-  });
-
-  world.powerUps.forEach((powerUp, i) => {
-    if (boundaryChecker(world.player, powerUp)) {
-      world.powerUps = world.powerUps.filter((_, ii) => i !== ii);
-
-      playSound(POWER_UP_AUDIO[lodash.random(0, POWER_UP_AUDIO.length - 1)]);
-
-      Object.keys(config[powerUp.type]?.playerChanges || {}).forEach(
-        (prop: string) => {
-          if (prop === "health") {
-            let health =
-              (config[powerUp.type].playerChanges?.[prop] || 0) +
-              world.player[prop];
-
-            if (health > world.player.maxHealth) {
-              health = 100;
-            }
-
-            world.player[prop] = health;
-            return;
-          }
-
-          // @ts-ignore
-          world.player[prop] +=
-            // @ts-ignore
-            config[powerUp.type].playerChanges?.[prop] ?? world.player[prop];
-        }
-      );
-    }
-  });
-}
-
-function update() {
-  let dt = lastUpdate ? (Date.now() - lastUpdate) / 1000 : 0;
-
-  playerControl(world, dt);
-
-  renderWorld(canvas, ctx, tick, world);
-
-  updateEntities(world, dt);
-
-  spawnEntities(world, dt, startTime);
-
-  window.requestAnimationFrame(update);
-
-  lastUpdate = Date.now();
-
-  if (Date.now() - startTime > 60000) {
-    const video: HTMLVideoElement = document.querySelector('#video')!;
-    video.style.display = 'block';
-    won = true;
+function onWindowResize() {
+  if (!canvas) {
     return;
   }
 
-  tick++;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
 
-window.requestAnimationFrame(update);
-
-window.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowDown" || e.code === "KeyS") {
-    userInputFlags.down = true;
-  } else if (e.code === "ArrowUp" || e.code === "KeyW") {
-    userInputFlags.up = true;
-  } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
-    userInputFlags.left = true;
-  } else if (e.code === "ArrowRight" || e.code === "KeyD") {
-    userInputFlags.right = true;
-  } else if (e.code === "Space") {
-    userInputFlags.attack = true;
+async function initializeRenderer(): Promise<Renderer> {
+  if (!canvas) {
+    throw new Error("No canvas");
   }
-});
 
-window.addEventListener("keyup", (e) => {
-  if (e.code === "ArrowUp" || e.code === "KeyW") {
-    userInputFlags.up = false;
-  } else if (e.code === "ArrowDown" || e.code === "KeyS") {
-    userInputFlags.down = false;
-  } else if (e.code === "ArrowLeft" || e.code === "KeyA") {
-    userInputFlags.left = false;
-  } else if (e.code === "ArrowRight" || e.code === "KeyD") {
-    userInputFlags.right = false;
-  } else if (e.code === "Space") {
-    userInputFlags.attack = false;
+  const renderer = new Renderer(canvas);
+
+  renderer.addSpriteSheetAndAnimations(
+    "shark",
+    SpriteSheetAndAnimations.fromDefinition(
+      "shark",
+      SHARK_SPRITE_SHEET_AND_ANIMATIONS
+    )
+  );
+
+  renderer.addSpriteSheetAndAnimations(
+    "wardrobe",
+    SpriteSheetAndAnimations.fromDefinition(
+      "wardrobe",
+      WARDROBE_SPRITE_SHEET_AND_ANIMATIONS
+    )
+  );
+
+  await renderer.loadSpriteSheets();
+
+  return renderer;
+}
+
+async function initialize(): Promise<void> {
+  const renderer = await initializeRenderer();
+
+  const g = new Game(renderer);
+
+  g.world.addEntity(
+    new EnemyWardrobe("wardobe-1", new Vector(4 * TILE_SIZE, 0), 0, new Vector(-32, 0), 0)
+  );
+
+  await g.init(Date.now() / 1000);
+
+  game = g;
+}
+
+let lastTick = 0;
+function tick() {
+  if (lastTick === 0) {
+    lastTick = Date.now() / 1000;
   }
-});
+
+  const now = Date.now() / 1000;
+
+  const dt = now - lastTick;
+
+  if (!game) {
+    window.requestAnimationFrame(tick);
+    return;
+  }
+
+  game.update(dt);
+
+  game.render(now);
+
+  lastTick = Date.now() / 1000;
+
+  window.requestAnimationFrame(tick);
+}
+
+window.addEventListener("resize", onWindowResize);
+window.requestAnimationFrame(tick);
+
+onWindowResize();
+
+initialize();
