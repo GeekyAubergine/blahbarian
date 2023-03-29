@@ -3,7 +3,7 @@ import { EntityConfig } from "../engine/Entity";
 export const TEST_ENITY_CONFIG: EntityConfig = {
   name: "test",
   spriteSheet: {
-    assetFileName: "wardrobe.png",
+    assetFileName: "enemies/wardrobe.png",
     rotationPoint: {
       x: 8,
       y: 8,

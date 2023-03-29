@@ -4,7 +4,7 @@ import { Movement } from "../engine/Movement";
 export const SHARK_ENTITY_CONFIG: EntityConfig = {
   name: "shark",
   spriteSheet: {
-    assetFileName: "shark-sprites.png",
+    assetFileName: "player/normal.png",
     rotationPoint: {
       x: 64,
       y: 64,
