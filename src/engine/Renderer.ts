@@ -163,8 +163,13 @@ export class Renderer {
 
     const rotationInRadians = (rotation * Math.PI) / 180;
 
-    const scaleX = TILE_SIZE / spriteSize.width;
-    const scaleY = TILE_SIZE / spriteSize.height;
+    const renderedWidth = spriteSheet.renderedSize?.width ?? TILE_SIZE;
+    const renderedHeight = spriteSheet.renderedSize?.height ?? TILE_SIZE;
+
+    console.log({ renderedWidth, renderedHeight })
+
+    const scaleX = renderedWidth / spriteSize.width;
+    const scaleY = renderedHeight / spriteSize.height;
 
     ctx.save();
     // ctx.scale(scaleX, scaleY);

@@ -8,11 +8,14 @@ import { Vector } from "./engine/Vector";
 import { TILE_SIZE } from "./engine/Constants";
 import { ENTITY_NAMES } from "./engine/Entity";
 import { TEST_ENITY_CONFIG } from "./assets/test";
+import { BROCCOLI_ENITY_CONFIG } from "./assets/broccoli";
+import { EnemyBroccoli } from "./engine/enemies/EnemyBroccoli";
 
 const ENTITIES = [
   TEST_ENITY_CONFIG,
   SHARK_ENTITY_CONFIG,
   WARDROBE_ENITY_CONFIG,
+  BROCCOLI_ENITY_CONFIG,
 ];
 
 const canvas = document.querySelector<HTMLCanvasElement>("#canvas");
@@ -38,8 +41,7 @@ async function initialize(): Promise<void> {
 
   g.getWorld().addEntity(
     g,
-    new EnemyWardrobe(
-      "test",
+    new EnemyBroccoli(
       new Vector(0, -2 * TILE_SIZE),
       0,
       new Vector(0, 0),
@@ -51,7 +53,6 @@ async function initialize(): Promise<void> {
   g.getWorld().addEntity(
     g,
     new EnemyWardrobe(
-      "wardobe",
       new Vector(4 * TILE_SIZE, 0),
       0,
       new Vector(-100, 0),

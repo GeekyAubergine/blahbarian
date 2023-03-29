@@ -39,7 +39,7 @@ export const WARDROBE_ENITY_CONFIG: EntityConfig = {
     },
     "wardrobe-bite": {
       frames: ["still", "bite"],
-      duration: 0.5,
+      duration: 0.325,
       loop: true,
     },
   },

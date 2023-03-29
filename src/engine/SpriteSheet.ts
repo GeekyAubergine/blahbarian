@@ -30,6 +30,10 @@ export type SpriteSheetConfig = {
     width: number;
     height: number;
   };
+  renderedSize?: {
+    width: number;
+    height: number;
+  };
 };
 
 export class SpriteSheet {
@@ -45,17 +49,24 @@ export class SpriteSheet {
     height: number;
   };
 
+  readonly renderedSize: {
+    width: number;
+    height: number;
+  } | null;
+
   image: ImageBitmap | null = null;
 
   constructor(
     sprites: Record<string, Sprite>,
     assetFileName: string,
     spriteSize: { width: number; height: number },
+    renderedSize: { width: number; height: number } | null,
     rotationPoint: { x: number; y: number }
   ) {
     this.sprites = sprites;
     this.assetFileName = `assets/${assetFileName}`;
     this.spriteSize = spriteSize;
+    this.renderedSize = renderedSize;
     this.rotationPoint = rotationPoint;
   }
 
@@ -87,6 +98,7 @@ export class SpriteSheet {
       sprites,
       definition.assetFileName,
       definition.spriteSize,
+      definition.renderedSize ?? null,
       definition.rotationPoint
     );
   }

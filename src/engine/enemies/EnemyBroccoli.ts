@@ -7,9 +7,8 @@ import { Renderer } from "../Renderer";
 import { Vector } from "../Vector";
 import { Enemy } from "./Enemy";
 
-export class EnemyWardrobe extends Enemy {
-  walkAnimation: AnimationTemplate | null = null;
-  bitingAnimation: AnimationTemplate | null = null;
+export class EnemyBroccoli extends Enemy {
+  idleAnimation: AnimationTemplate | null = null;
 
   biting: boolean = false;
 
@@ -21,7 +20,7 @@ export class EnemyWardrobe extends Enemy {
     attributes: EntityAttributes
   ) {
     super(
-      ENTITY_NAMES.WARDROBE,
+      ENTITY_NAMES.BROCCOLI,
       position,
       rotation,
       velocity,
@@ -33,12 +32,9 @@ export class EnemyWardrobe extends Enemy {
   init(game: Game) {
     super.init(game);
 
-    this.walkAnimation = game
+    this.idleAnimation = game
       .getRenderer()
-      .findAnimationTemplate("wardrobe-walk");
-    this.bitingAnimation = game
-      .getRenderer()
-      .findAnimationTemplate("wardrobe-bite");
+      .findAnimationTemplate("broccoli-idle");
   }
 
   update(game: Game, dt: number, events: Event[]) {
@@ -48,26 +44,32 @@ export class EnemyWardrobe extends Enemy {
       game.getWorld().getPlayer().getPosition()
     );
 
-    if (distanceToPlayer < TILE_SIZE * 0.75) {
-      if (!this.biting) {
-        this.activeAnimation = game
-          .getRenderer()
-          .makeAnimation(game, this.bitingAnimation);
-        this.biting = true;
-      }
-    } else {
-      if (this.biting) {
-        this.activeAnimation = game
-          .getRenderer()
-          .makeAnimation(game, this.walkAnimation);
-        this.biting = false;
-      }
-    }
-
     if (this.activeAnimation == null) {
       this.activeAnimation = game
         .getRenderer()
-        .makeAnimation(game, this.walkAnimation);
+        .makeAnimation(game, this.idleAnimation);
     }
+
+    // if (distanceToPlayer < TILE_SIZE * 0.75) {
+    //   if (!this.biting) {
+    //     this.activeAnimation = game
+    //       .getRenderer()
+    //       .makeAnimation(game, this.bitingAnimation);
+    //     this.biting = true;
+    //   }
+    // } else {
+    //   if (this.biting) {
+    //     this.activeAnimation = game
+    //       .getRenderer()
+    //       .makeAnimation(game, this.walkAnimation);
+    //     this.biting = false;
+    //   }
+    // }
+
+    // if (this.activeAnimation == null) {
+    //   this.activeAnimation = game
+    //     .getRenderer()
+    //     .makeAnimation(game, this.walkAnimation);
+    // }
   }
 }

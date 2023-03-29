@@ -45,5 +45,5 @@ export const TEST_ENITY_CONFIG: EntityConfig = {
   },
   attributes: {
     walkingSpeed: 32,
-  }
+  },
 };
