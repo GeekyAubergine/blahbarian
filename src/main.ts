@@ -3,12 +3,12 @@ import { SHARK_ENTITY_CONFIG } from "./assets/shark";
 import { Renderer } from "./engine/Renderer";
 import { Game } from "./game/Game";
 import { WARDROBE_ENITY_CONFIG } from "./assets/wardrobe";
-import { EnemyWardrobe } from "./game/enemies/EnemyWardrobe";
+import { EnemyWardrobe } from "./game/entity/enemies/EnemyWardrobe";
 import { Vector } from "./engine/Vector";
 import { TEST_ENITY_CONFIG } from "./assets/test";
 import { BROCCOLI_ENITY_CONFIG } from "./assets/broccoli";
-import { EnemyBroccoli } from "./game/enemies/EnemyBroccoli";
 import { ENTITY_NAMES } from "./game/Constants";
+import { PowerupBroccoli } from "./game/entity/powerups/PowerupBroccoli";
 
 const ENTITIES = [
   TEST_ENITY_CONFIG,
@@ -40,11 +40,8 @@ async function initialize(): Promise<void> {
 
   g.getWorld().addEntity(
     g,
-    new EnemyBroccoli(
+    new PowerupBroccoli(
       new Vector(0, -256),
-      0,
-      new Vector(0, 0),
-      0,
       g.getEntityDefaultAttributes(ENTITY_NAMES.WARDROBE)
     )
   );

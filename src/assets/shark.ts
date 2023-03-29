@@ -1,4 +1,4 @@
-import { EntityConfig } from "../engine/Entity";
+import { EntityConfig } from "../game/entity/Entity";
 import { Movement } from "../engine/Movement";
 
 export const SHARK_ENTITY_CONFIG: EntityConfig = {
@@ -99,6 +99,6 @@ export const SHARK_ENTITY_CONFIG: EntityConfig = {
     [Movement.UP_LEFT]: "shark-up",
   },
   attributes: {
-    walkingSpeed: 256,
+    movementSpeed: 256,
   },
 };

@@ -1,10 +1,11 @@
-import { AnimationTemplate } from "../../engine/Animation";
-import { EntityAttributes } from "../../engine/Entity";
-import { Event } from "../../engine/Events";
-import { Game } from "../Game";
-import { Vector } from "../../engine/Vector";
+import { AnimationTemplate } from "../../../engine/Animation";
+import { EntityAttributes } from "../Entity";
+import { Event } from "../../Events";
+import { Game } from "../../Game";
+import { Vector } from "../../../engine/Vector";
 import { Enemy } from "./Enemy";
-import { ENTITY_NAMES } from "../Constants";
+import { ENTITY_NAMES } from "../../Constants";
+import { Renderer } from "../../../engine/Renderer";
 
 export class EnemyBroccoli extends Enemy {
   idleAnimation: AnimationTemplate | null = null;
@@ -28,16 +29,14 @@ export class EnemyBroccoli extends Enemy {
     );
   }
 
-  init(game: Game) {
-    super.init(game);
+  init(renderer: Renderer) {
+    super.init(renderer);
 
-    this.idleAnimation = game
-      .getRenderer()
-      .findAnimationTemplate("broccoli-idle");
+    this.idleAnimation = renderer.findAnimationTemplate("broccoli-idle");
   }
 
-  update(game: Game, dt: number, events: Event[]) {
-    super.update(game, dt, events);
+  update(game: Game, dt: number) {
+    super.update(game, dt);
 
     const distanceToPlayer = this.position.distance(
       game.getWorld().getPlayer().getPosition()
@@ -46,7 +45,7 @@ export class EnemyBroccoli extends Enemy {
     if (this.activeAnimation == null) {
       this.activeAnimation = game
         .getRenderer()
-        .makeAnimation(game, this.idleAnimation);
+        .makeAnimation(this.idleAnimation, game.getNow());
     }
 
     // if (distanceToPlayer < TILE_SIZE * 0.75) {

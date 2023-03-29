@@ -1,6 +1,5 @@
 import { Animation, AnimationTemplate } from "./Animation";
-import { EntityConfig } from "./Entity";
-import { Game } from "../game/Game";
+import { EntityConfig } from "../game/entity/Entity";
 import {
   movementToAnimationFromConfig,
   MovementToAnimationTemplateMap,
@@ -22,7 +21,9 @@ export class Renderer {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d")!;
 
+    // @ts-ignore
     this.ctx.webkitImageSmoothingEnabled = false;
+    // @ts-ignore
     this.ctx.mozImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
   }
@@ -74,13 +75,13 @@ export class Renderer {
   }
 
   makeAnimation(
-    game: Game,
-    template: AnimationTemplate | null
+    template: AnimationTemplate | null,
+    currentTime: number
   ): Animation | null {
     if (!template) {
       return null;
     }
-    return Animation.fromTemplate(template, game.getNow());
+    return Animation.fromTemplate(template, currentTime);
   }
 
   clear() {
@@ -119,6 +120,23 @@ export class Renderer {
 
   scale(x: number, y: number) {
     this.ctx.scale(x, y);
+  }
+
+  renderCircle(
+    position: Vector,
+    radius: number,
+    strokeColor: string,
+    fillColor: string
+  ) {
+    const { ctx } = this;
+
+    ctx.strokeStyle = strokeColor;
+    ctx.fillStyle = fillColor;
+
+    ctx.beginPath();
+    ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill()
   }
 
   renderSprite(

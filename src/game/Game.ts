@@ -1,6 +1,6 @@
 import { Camera } from "./Camera";
-import { EntityAttributes, EntityConfig } from "../engine/Entity";
-import { Event } from "../engine/Events";
+import { EntityAttributes, EntityConfig } from "./entity/Entity";
+import { Event } from "./Events";
 import { Keyboard } from "../engine/Keyboard";
 import { Renderer } from "../engine/Renderer";
 import { Vector } from "../engine/Vector";
@@ -43,6 +43,7 @@ export class Game {
   }
 
   dispatchEvent(event: Event) {
+    console.log('dispatchEvent', event)
     this.events.push(event);
   }
 
@@ -57,7 +58,7 @@ export class Game {
 
     const dt = this.now - this.lastTick;
 
-    this.world.update(this, dt, this.events);
+    this.world.update(this, dt);
     this.camera.update(this, dt)
     this.events = [];
 

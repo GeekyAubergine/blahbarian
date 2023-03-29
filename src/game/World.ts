@@ -1,5 +1,5 @@
-import { Entity } from "../engine/Entity";
-import { Event } from "../engine/Events";
+import { Entity } from "./entity/Entity";
+import { Event } from "./Events";
 import { Game } from "./Game";
 import { Player } from "./Player";
 import { Vector } from "../engine/Vector";
@@ -8,6 +8,7 @@ import { ENTITY_NAMES } from "./Constants";
 export class World {
   private player: Player;
   private entities: Entity[] = [];
+  private entitiesToRemove: string[] = [];
 
   constructor(game: Game) {
     this.player = new Player(
@@ -27,10 +28,17 @@ export class World {
     this.player.init(game);
   }
 
-  update(game: Game, dt: number, events: Event[]) {
-    this.player.update(game, dt, events);
+  update(game: Game, dt: number) {
+    this.entities = this.entities.filter((entity) => {
+      if (this.entitiesToRemove.includes(entity.getId())) {
+        return false;
+      }
+      return true;
+    });
+
+    this.player.update(game, dt);
     for (const entity of this.entities) {
-      entity.update(game, dt, events);
+      entity.update(game, dt);
     }
   }
 
@@ -62,6 +70,10 @@ export class World {
     entity.init(game);
     this.entities.push(entity);
     console.log("Added entity", entity);
+  }
+
+  removeEntity(entity: Entity) {
+    this.entitiesToRemove.push(entity.getId());
   }
 
   getPlayer() {

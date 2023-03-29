@@ -1,19 +1,20 @@
-import { Animation, AnimationConfig } from "./Animation";
-import { Event } from "./Events";
-import { Game } from "../game/Game";
+import { Animation, AnimationConfig } from "../../engine/Animation";
+import { Game } from "../Game";
 import {
   animationForMovement,
   Movement,
   movementFromVector,
   MovementToAnimationConfig,
   MovementToAnimationTemplateMap,
-} from "./Movement";
-import { Renderer } from "./Renderer";
-import { SpriteSheetConfig } from "./SpriteSheet";
-import { Vector } from "./Vector";
+} from "../../engine/Movement";
+import { Renderer } from "../../engine/Renderer";
+import { SpriteSheetConfig } from "../../engine/SpriteSheet";
+import { Vector } from "../../engine/Vector";
+import { Collider } from "../../engine/collider/Collider";
+import { RENDER_COLLIDERS } from "../Constants";
 
 export type EntityAttributes = {
-  walkingSpeed: number;
+  movementSpeed: number;
 };
 
 export type EntityConfig = {
@@ -64,10 +65,10 @@ export class Entity {
       .findMovementAnimationTemplateMap(this.name);
   }
 
-  update(game: Game, dt: number, events: Event[]) {
+  update(game: Game, dt: number) {
     const walkingVelocity = this.velocity
       .normalize()
-      .mul(this.attribtes.walkingSpeed);
+      .mul(this.attribtes.movementSpeed);
     this.position = this.position.add(walkingVelocity.mul(dt));
     this.rotation += this.angularVelocity * dt;
     const previousMovement = this.movement;
@@ -80,8 +81,11 @@ export class Entity {
       this.activeAnimation = game
         .getRenderer()
         .makeAnimation(
-          game,
-          animationForMovement(this.movement, this.movementAnimationTemplateMap)
+          animationForMovement(
+            this.movement,
+            this.movementAnimationTemplateMap
+          ),
+          game.getNow()
         );
     }
 
@@ -89,8 +93,11 @@ export class Entity {
       this.activeAnimation = game
         .getRenderer()
         .makeAnimation(
-          game,
-          animationForMovement(this.movement, this.movementAnimationTemplateMap)
+          animationForMovement(
+            this.movement,
+            this.movementAnimationTemplateMap
+          ),
+          game.getNow()
         );
     }
   }
@@ -99,6 +106,14 @@ export class Entity {
     if (this.activeAnimation) {
       this.activeAnimation.render(renderer, now, this.position, this.rotation);
     }
+
+    if (RENDER_COLLIDERS) {
+      this.getCollider()?.render(renderer);
+    }
+  }
+
+  getId() {
+    return this.id;
   }
 
   getPosition() {
@@ -106,6 +121,10 @@ export class Entity {
   }
 
   getWalkingSpeed() {
-    return this.attribtes.walkingSpeed;
+    return this.attribtes.movementSpeed;
+  }
+
+  getCollider(): Collider | null {
+    return null;
   }
 }

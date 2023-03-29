@@ -1,43 +1,46 @@
-import { Animation } from "../engine/Animation";
-import { Entity } from "../engine/Entity";
-import { Event } from "../engine/Events";
 import { Game } from "./Game";
-import { Renderer } from "../engine/Renderer";
 import { Vector } from "../engine/Vector";
-import { World } from "./World";
+import { CircleCollider } from "../engine/collider/CircleCollider";
+import { Collider } from "../engine/collider/Collider";
+import { Entity } from "./entity/Entity";
+import { Renderer } from "../engine/Renderer";
+import { RENDER_COLLIDERS } from "./Constants";
 
+const COLLIDER_RADIUS = 54;
+const COLLIDER_OFFSET = new Vector(5, 2);
 export class Player extends Entity {
-//   init(game: Game) {
-//     super.init(game);
-//     this.idleAnimation = renderer.findAnimation("shark-idle", now);
-//     this.downAnimation = renderer.findAnimation("shark-idle", now);
-//     this.upAnimation = renderer.findAnimation("shark-idle", now);
-//     this.leftAnimation = renderer.findAnimation("shark-idle", now);
-// "shark-idle",     this.rightAnimation = renderer.findAnimation(now);
-//     this.animation = this.idleAnimation;
-//   }
-
-  update(game: Game, dt: number, events: Event[]) {
-    super.update(game, dt, events);
+  update(game: Game, dt: number) {
+    super.update(game, dt);
 
     this.velocity = Vector.ZERO;
 
-    if (game.getKeyboard().isKeyDown("ArrowUp") || game.getKeyboard().isKeyDown("w")) {
+    if (
+      game.getKeyboard().isKeyDown("ArrowUp") ||
+      game.getKeyboard().isKeyDown("w")
+    ) {
       this.velocity = this.velocity.add(new Vector(0, -1));
     }
-    if (game.getKeyboard().isKeyDown("ArrowDown") || game.getKeyboard().isKeyDown("s")) {
+    if (
+      game.getKeyboard().isKeyDown("ArrowDown") ||
+      game.getKeyboard().isKeyDown("s")
+    ) {
       this.velocity = this.velocity.add(new Vector(0, 1));
     }
-    if (game.getKeyboard().isKeyDown("ArrowLeft") || game.getKeyboard().isKeyDown("a")) {
+    if (
+      game.getKeyboard().isKeyDown("ArrowLeft") ||
+      game.getKeyboard().isKeyDown("a")
+    ) {
       this.velocity = this.velocity.add(new Vector(-1, 0));
     }
-    if (game.getKeyboard().isKeyDown("ArrowRight") || game.getKeyboard().isKeyDown("d")) {
+    if (
+      game.getKeyboard().isKeyDown("ArrowRight") ||
+      game.getKeyboard().isKeyDown("d")
+    ) {
       this.velocity = this.velocity.add(new Vector(1, 0));
     }
   }
 
-//   // ...
-//   render(renderer: Renderer, now: number): void {
-
-//   }
+  getCollider(): Collider {
+    return new CircleCollider(this.position.add(COLLIDER_OFFSET), COLLIDER_RADIUS);
+  }
 }

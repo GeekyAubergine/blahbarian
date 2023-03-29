@@ -1,4 +1,4 @@
-import { EntityConfig } from "../engine/Entity";
+import { EntityConfig } from "../game/entity/Entity";
 
 export const BROCCOLI_ENITY_CONFIG: EntityConfig = {
   name: "broccoli",
@@ -39,6 +39,6 @@ export const BROCCOLI_ENITY_CONFIG: EntityConfig = {
     },
   },
   attributes: {
-    walkingSpeed: 0,
+    movementSpeed: 0,
   }
 };

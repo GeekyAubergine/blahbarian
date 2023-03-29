@@ -1,4 +1,4 @@
-import { EntityConfig } from "../engine/Entity";
+import { EntityConfig } from "../game/entity/Entity";
 
 export const WARDROBE_ENITY_CONFIG: EntityConfig = {
   name: "wardrobe",
@@ -48,6 +48,6 @@ export const WARDROBE_ENITY_CONFIG: EntityConfig = {
     },
   },
   attributes: {
-    walkingSpeed: 32,
+    movementSpeed: 32,
   },
 };

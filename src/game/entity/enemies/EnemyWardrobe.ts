@@ -1,10 +1,10 @@
-import { AnimationTemplate } from "../../engine/Animation";
-import { EntityAttributes } from "../../engine/Entity";
-import { Event } from "../../engine/Events";
-import { Game } from "../Game";
-import { Vector } from "../../engine/Vector";
+import { AnimationTemplate } from "../../../engine/Animation";
+import { EntityAttributes } from "../Entity";
+import { Event } from "../../Events";
+import { Game } from "../../Game";
+import { Vector } from "../../../engine/Vector";
 import { Enemy } from "./Enemy";
-import { ENTITY_NAMES } from "../Constants";
+import { ENTITY_NAMES } from "../../Constants";
 
 export class EnemyWardrobe extends Enemy {
   walkAnimation: AnimationTemplate | null = null;
@@ -40,8 +40,8 @@ export class EnemyWardrobe extends Enemy {
       .findAnimationTemplate("wardrobe-bite");
   }
 
-  update(game: Game, dt: number, events: Event[]) {
-    super.update(game, dt, events);
+  update(game: Game, dt: number) {
+    super.update(game, dt);
 
     const distanceToPlayer = this.position.distance(
       game.getWorld().getPlayer().getPosition()
@@ -51,14 +51,14 @@ export class EnemyWardrobe extends Enemy {
       if (!this.biting) {
         this.activeAnimation = game
           .getRenderer()
-          .makeAnimation(game, this.bitingAnimation);
+          .makeAnimation(this.bitingAnimation, game.getNow());
         this.biting = true;
       }
     } else {
       if (this.biting) {
         this.activeAnimation = game
           .getRenderer()
-          .makeAnimation(game, this.walkAnimation);
+          .makeAnimation(this.walkAnimation, game.getNow());
         this.biting = false;
       }
     }
@@ -66,7 +66,7 @@ export class EnemyWardrobe extends Enemy {
     if (this.activeAnimation == null) {
       this.activeAnimation = game
         .getRenderer()
-        .makeAnimation(game, this.walkAnimation);
+        .makeAnimation(this.walkAnimation, game.getNow());
     }
   }
 }
