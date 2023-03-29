@@ -1,15 +1,14 @@
 import "./style.css";
 import { SHARK_ENTITY_CONFIG } from "./assets/shark";
 import { Renderer } from "./engine/Renderer";
-import { Game } from "./engine/Game";
+import { Game } from "./game/Game";
 import { WARDROBE_ENITY_CONFIG } from "./assets/wardrobe";
-import { EnemyWardrobe } from "./engine/enemies/EnemyWardrobe";
+import { EnemyWardrobe } from "./game/enemies/EnemyWardrobe";
 import { Vector } from "./engine/Vector";
-import { TILE_SIZE } from "./engine/Constants";
-import { ENTITY_NAMES } from "./engine/Entity";
 import { TEST_ENITY_CONFIG } from "./assets/test";
 import { BROCCOLI_ENITY_CONFIG } from "./assets/broccoli";
-import { EnemyBroccoli } from "./engine/enemies/EnemyBroccoli";
+import { EnemyBroccoli } from "./game/enemies/EnemyBroccoli";
+import { ENTITY_NAMES } from "./game/Constants";
 
 const ENTITIES = [
   TEST_ENITY_CONFIG,
@@ -42,7 +41,7 @@ async function initialize(): Promise<void> {
   g.getWorld().addEntity(
     g,
     new EnemyBroccoli(
-      new Vector(0, -2 * TILE_SIZE),
+      new Vector(0, -256),
       0,
       new Vector(0, 0),
       0,
@@ -53,7 +52,7 @@ async function initialize(): Promise<void> {
   g.getWorld().addEntity(
     g,
     new EnemyWardrobe(
-      new Vector(4 * TILE_SIZE, 0),
+      new Vector(256, 0),
       0,
       new Vector(-100, 0),
       0,

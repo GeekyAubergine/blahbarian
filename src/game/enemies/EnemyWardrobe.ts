@@ -1,11 +1,10 @@
-import { Animation, AnimationTemplate } from "../Animation";
-import { TILE_SIZE } from "../Constants";
-import { EntityAttributes, ENTITY_NAMES } from "../Entity";
-import { Event } from "../Events";
+import { AnimationTemplate } from "../../engine/Animation";
+import { EntityAttributes } from "../../engine/Entity";
+import { Event } from "../../engine/Events";
 import { Game } from "../Game";
-import { Renderer } from "../Renderer";
-import { Vector } from "../Vector";
+import { Vector } from "../../engine/Vector";
 import { Enemy } from "./Enemy";
+import { ENTITY_NAMES } from "../Constants";
 
 export class EnemyWardrobe extends Enemy {
   walkAnimation: AnimationTemplate | null = null;
@@ -48,7 +47,7 @@ export class EnemyWardrobe extends Enemy {
       game.getWorld().getPlayer().getPosition()
     );
 
-    if (distanceToPlayer < TILE_SIZE * 0.75) {
+    if (distanceToPlayer < 96) {
       if (!this.biting) {
         this.activeAnimation = game
           .getRenderer()

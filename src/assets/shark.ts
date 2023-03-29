@@ -13,6 +13,10 @@ export const SHARK_ENTITY_CONFIG: EntityConfig = {
       width: 128,
       height: 128,
     },
+    renderedSize: {
+      width: 128,
+      height: 128,
+    },
     sprites: {
       down1: {
         sx: 0,

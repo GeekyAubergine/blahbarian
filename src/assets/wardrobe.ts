@@ -12,6 +12,10 @@ export const WARDROBE_ENITY_CONFIG: EntityConfig = {
       width: 16,
       height: 16,
     },
+    renderedSize: {
+      width: 128,
+      height: 128,
+    },
     sprites: {
       still: {
         sx: 0,
@@ -45,5 +49,5 @@ export const WARDROBE_ENITY_CONFIG: EntityConfig = {
   },
   attributes: {
     walkingSpeed: 32,
-  }
+  },
 };

@@ -1,10 +1,11 @@
 import { Camera } from "./Camera";
-import { EntityAttributes, EntityConfig, ENTITY_NAMES } from "./Entity";
-import { Event } from "./Events";
-import { Keyboard } from "./Keyboard";
-import { Renderer } from "./Renderer";
-import { Vector } from "./Vector";
+import { EntityAttributes, EntityConfig } from "../engine/Entity";
+import { Event } from "../engine/Events";
+import { Keyboard } from "../engine/Keyboard";
+import { Renderer } from "../engine/Renderer";
+import { Vector } from "../engine/Vector";
 import { World } from "./World";
+import { ENTITY_NAMES } from "./Constants";
 
 export class Game {
   private renderer: Renderer;
@@ -65,7 +66,8 @@ export class Game {
   }
 
   render() {
-    this.renderer.renderWorld(this, this.world, this.now);
+    this.renderer.clear();
+    this.world.render(this, this.now);
   }
 
   getNow() {

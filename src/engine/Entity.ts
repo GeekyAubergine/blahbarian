@@ -1,6 +1,6 @@
 import { Animation, AnimationConfig } from "./Animation";
 import { Event } from "./Events";
-import { Game } from "./Game";
+import { Game } from "../game/Game";
 import {
   animationForMovement,
   Movement,
@@ -24,15 +24,6 @@ export type EntityConfig = {
   attributes: EntityAttributes;
 };
 
-export const ENTITY_NAMES = {
-  TEST: "test",
-  PLAYER: "shark",
-  WARDROBE: "wardrobe",
-  BROCCOLI: "broccoli",
-};
-
-export type ENTITY_NAMES = typeof ENTITY_NAMES[keyof typeof ENTITY_NAMES];
-
 let idCount = 0;
 export class Entity {
   protected readonly name: string;
@@ -49,7 +40,7 @@ export class Entity {
     null;
 
   constructor(
-    name: ENTITY_NAMES,
+    name: string,
     position: Vector,
     rotation: number,
     velocity: Vector,

@@ -30,7 +30,7 @@ export type SpriteSheetConfig = {
     width: number;
     height: number;
   };
-  renderedSize?: {
+  renderedSize: {
     width: number;
     height: number;
   };
@@ -52,7 +52,7 @@ export class SpriteSheet {
   readonly renderedSize: {
     width: number;
     height: number;
-  } | null;
+  };
 
   image: ImageBitmap | null = null;
 
@@ -60,7 +60,7 @@ export class SpriteSheet {
     sprites: Record<string, Sprite>,
     assetFileName: string,
     spriteSize: { width: number; height: number },
-    renderedSize: { width: number; height: number } | null,
+    renderedSize: { width: number; height: number },
     rotationPoint: { x: number; y: number }
   ) {
     this.sprites = sprites;

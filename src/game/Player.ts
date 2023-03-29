@@ -1,9 +1,9 @@
-import { Animation } from "./Animation";
-import { Entity } from "./Entity";
-import { Event } from "./Events";
+import { Animation } from "../engine/Animation";
+import { Entity } from "../engine/Entity";
+import { Event } from "../engine/Events";
 import { Game } from "./Game";
-import { Renderer } from "./Renderer";
-import { Vector } from "./Vector";
+import { Renderer } from "../engine/Renderer";
+import { Vector } from "../engine/Vector";
 import { World } from "./World";
 
 export class Player extends Entity {
