@@ -9,7 +9,9 @@ export const ENTITY_NAMES = {
 
 export type ENTITY_NAMES = typeof ENTITY_NAMES[keyof typeof ENTITY_NAMES];
 
-export type PowerupEffectType = "add-health";
+export enum PowerupEffectType {
+  ADD_HEALTH = "ADD_HEALTH",
+}
 
 export type PowerupEffectBase<T extends PowerupEffectType, D> = {
   type: T;
@@ -17,7 +19,7 @@ export type PowerupEffectBase<T extends PowerupEffectType, D> = {
 };
 
 export type PowerupEffectAddHealth = PowerupEffectBase<
-  "add-health",
+  PowerupEffectType.ADD_HEALTH,
   { amount: number }
 >;
 
@@ -25,7 +27,7 @@ export type PowerupEffect = PowerupEffectAddHealth;
 
 export const POWERUP_EFFECTS: Record<string, PowerupEffect> = {
   "broccoli-add-health": {
-    type: "add-health",
+    type: PowerupEffectType.ADD_HEALTH,
     data: {
       amount: 10,
     },

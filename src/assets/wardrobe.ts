@@ -49,5 +49,6 @@ export const WARDROBE_ENITY_CONFIG: EntityConfig = {
   },
   attributes: {
     movementSpeed: 32,
+    maxHealth: 1,
   },
 };

@@ -12,9 +12,11 @@ import { SpriteSheetConfig } from "../../engine/SpriteSheet";
 import { Vector } from "../../engine/Vector";
 import { Collider } from "../../engine/collider/Collider";
 import { RENDER_COLLIDERS } from "../Constants";
+import { Event } from "../Events";
 
 export type EntityAttributes = {
   movementSpeed: number;
+  maxHealth: number;
 };
 
 export type EntityConfig = {
@@ -36,6 +38,8 @@ export class Entity {
   protected movement: Movement = Movement.IDLE;
   protected attribtes: EntityAttributes;
 
+  protected health: number;
+
   protected activeAnimation: Animation | null = null;
   protected movementAnimationTemplateMap: MovementToAnimationTemplateMap | null =
     null;
@@ -55,6 +59,7 @@ export class Entity {
     this.velocity = velocity;
     this.angularVelocity = angularVelocity;
     this.attribtes = attributes;
+    this.health = attributes.maxHealth;
 
     idCount += 1;
   }
@@ -66,6 +71,11 @@ export class Entity {
   }
 
   update(game: Game, dt: number) {
+    if (this.health <= 0) {
+      game.getWorld().removeEntity(this);
+      return;
+    }
+
     const walkingVelocity = this.velocity
       .normalize()
       .mul(this.attribtes.movementSpeed);
@@ -101,6 +111,8 @@ export class Entity {
         );
     }
   }
+
+  onEvent(game: Game, event: Event) {}
 
   render(renderer: Renderer, now: number) {
     if (this.activeAnimation) {

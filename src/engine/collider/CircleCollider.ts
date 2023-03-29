@@ -25,6 +25,6 @@ export class CircleCollider extends Collider {
   }
 
   render(renderer: Renderer) {
-    renderer.renderCircle(this.position, this.radius, "#ff0000", "#ff00ff88");
+    renderer.renderCircle(this.position, this.radius, "#ff0000", "#ff000044");
   }
 }

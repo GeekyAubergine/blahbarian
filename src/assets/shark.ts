@@ -100,5 +100,6 @@ export const SHARK_ENTITY_CONFIG: EntityConfig = {
   },
   attributes: {
     movementSpeed: 256,
+    maxHealth: 100,
   },
 };

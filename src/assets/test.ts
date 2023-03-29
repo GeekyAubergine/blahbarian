@@ -49,5 +49,6 @@ export const TEST_ENITY_CONFIG: EntityConfig = {
   },
   attributes: {
     movementSpeed: 32,
+    maxHealth: 1,
   },
 };

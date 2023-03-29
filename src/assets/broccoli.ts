@@ -40,5 +40,6 @@ export const BROCCOLI_ENITY_CONFIG: EntityConfig = {
   },
   attributes: {
     movementSpeed: 0,
+    maxHealth: 1,
   }
 };

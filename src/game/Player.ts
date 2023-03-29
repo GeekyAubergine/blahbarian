@@ -4,7 +4,8 @@ import { CircleCollider } from "../engine/collider/CircleCollider";
 import { Collider } from "../engine/collider/Collider";
 import { Entity } from "./entity/Entity";
 import { Renderer } from "../engine/Renderer";
-import { RENDER_COLLIDERS } from "./Constants";
+import { PowerupEffect, PowerupEffectType, POWERUP_EFFECTS, RENDER_COLLIDERS } from "./Constants";
+import { Event, EventType } from "./Events";
 
 const COLLIDER_RADIUS = 54;
 const COLLIDER_OFFSET = new Vector(5, 2);
@@ -40,7 +41,38 @@ export class Player extends Entity {
     }
   }
 
+  onEvent(game: Game, event: Event): void {
+    super.onEvent(game, event);
+
+    switch (event.type) {
+      case EventType.POWERUP_TRIGGERED:
+        this.onPowerupTriggered(game, event.data.effect);
+        break;
+      default:
+        break;
+    }
+  }
+
+  onPowerupTriggered(game: Game, powerup: PowerupEffect) {
+    const { type, data } = powerup;
+
+    switch (type) {
+      case PowerupEffectType.ADD_HEALTH:
+        console.log("add health");
+        this.health = Math.min(
+          this.health + data.amount,
+          this.attribtes.maxHealth
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
   getCollider(): Collider {
-    return new CircleCollider(this.position.add(COLLIDER_OFFSET), COLLIDER_RADIUS);
+    return new CircleCollider(
+      this.position.add(COLLIDER_OFFSET),
+      COLLIDER_RADIUS
+    );
   }
 }

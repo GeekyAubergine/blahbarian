@@ -42,6 +42,13 @@ export class World {
     }
   }
 
+  onEvent(game: Game, event: Event) {
+    this.player.onEvent(game, event);
+    for (const entity of this.entities) {
+      entity.onEvent(game, event);
+    }
+  }
+
   render(game: Game, now: number) {
     const renderer = game.getRenderer();
     const { width, height } = renderer.getSize();

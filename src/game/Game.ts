@@ -43,7 +43,6 @@ export class Game {
   }
 
   dispatchEvent(event: Event) {
-    console.log('dispatchEvent', event)
     this.events.push(event);
   }
 
@@ -58,12 +57,17 @@ export class Game {
 
     const dt = this.now - this.lastTick;
 
-    this.world.update(this, dt);
-    this.camera.update(this, dt)
+    const eventsToProcess = this.events.slice();
     this.events = [];
 
-    this.lastTick = this.now;
+    for (const event of eventsToProcess) {
+      this.world.onEvent(this, event);
+    }
 
+    this.world.update(this, dt);
+    this.camera.update(this, dt);
+
+    this.lastTick = this.now;
   }
 
   render() {
